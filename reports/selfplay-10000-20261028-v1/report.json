@@ -1,0 +1,86 @@
+{
+  "dataset": "selfplay-10000-v1",
+  "source": "agarilab-selfplay",
+  "status": "complete-and-frozen",
+  "dataset_sha256": "fad436fee0a6798ab733740df846153a889bfe481bad0aafbfa8ee8e0ca489ef",
+  "partitions": {
+    "test": 500,
+    "train": 9000,
+    "validation": 500
+  },
+  "games": 10000,
+  "unique_ids": 10000,
+  "unique_canonical_hashes": 10000,
+  "steps": 6064610,
+  "decisions": 6142629,
+  "rounds": 98042,
+  "quarantine_count": 0,
+  "raw_conversion_verified_games": 10000,
+  "acquisition_seconds": 1803.040528,
+  "native_refreeze_verification_seconds": 425.5082221670309,
+  "archive_audit_seconds": 49.03767379105557,
+  "config": {
+    "agent_provenance": [
+      {
+        "kind": "builtin",
+        "name": "efficiency"
+      },
+      {
+        "kind": "builtin",
+        "name": "efficiency"
+      },
+      {
+        "kind": "builtin",
+        "name": "efficiency"
+      },
+      {
+        "kind": "builtin",
+        "name": "efficiency"
+      }
+    ],
+    "agents": [
+      "efficiency",
+      "efficiency",
+      "efficiency",
+      "efficiency"
+    ],
+    "code": {
+      "package": "agari-kit",
+      "source_sha256": "e1991979d79a373ca54050786616f57ded571a8d20de326a6e66982244dd1979",
+      "version": "0.1.0"
+    },
+    "engine": {
+      "binary_sha256": "169c8c2c53bdace01e4ca319f54050565fe728a5b1b2fc6b7f3046738887071d",
+      "version": "0.4.10"
+    },
+    "games": 10000,
+    "rules": {
+      "engine_version": "0.4.10",
+      "game_mode": "4p-red-half",
+      "preset": "tenhou"
+    },
+    "schema_version": 1,
+    "seed_start": 500000,
+    "source": "agarilab-selfplay"
+  },
+  "producer_commit": "9e3e866a046e40fecf94d03d315c9cc000d015b1",
+  "prior_dataset_hash_overlap": {
+    "smoke-v1": 0,
+    "selfplay-v1": 0
+  },
+  "split_file_sha256": "98d2fef20db93fa907a2efb3ea85d0f8a65d4cf9bc00a13ef4b6f927d96a01ea",
+  "catalog_sha256": "0c050c422095b502df548bcbd7a569fe252460246abf9db60453e265b4556e02",
+  "parquet_sha256": "ccea54d5757e52ae74f1b301ee4ac6225b5dd39291a90714e720994d823ff189",
+  "audit_report_sha256": "2979be65f754006c53f200b0a694092b1857ed7055f95f1e4de2ff6266202abc",
+  "audit_script_sha256": "2f5c19c04eca4611034f7b232ac9396566f49f366974d3fb2a38b1edf9fa31fb",
+  "collection_reuse_check": "not repeated at 10000 games; prior 1000-game idempotence evidence remains separate",
+  "training_on_this_dataset": "not-performed",
+  "behavior_coverage": {
+    "chi": 0,
+    "pon": 0,
+    "ankan": 0,
+    "kakan": 0,
+    "daiminkan": 0,
+    "basis": "observed complete event counts in audit report; all four producer agents are efficiency"
+  }
+}

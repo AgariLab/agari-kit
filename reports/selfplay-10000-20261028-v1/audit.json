@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "dataset": "selfplay-10000-v1",
+  "started_at": "2026-10-27T19:30:45.277634+00:00",
+  "completed_at": "2026-10-27T19:31:34.315563+00:00",
+  "elapsed_seconds": 49.03767379105557,
+  "audit_script_sha256": "2f5c19c04eca4611034f7b232ac9396566f49f366974d3fb2a38b1edf9fa31fb",
+  "scope": {
+    "native_replay_performed": false,
+    "split_contents_read": false,
+    "training_performed": false,
+    "note": "All-game archival QA. Parent separately performs official native replay and split freeze."
+  },
+  "producer_commit_checked": "9e3e866a046e40fecf94d03d315c9cc000d015b1",
+  "acquisition": {
+    "added": 10000,
+    "completed_at": "2026-10-27T19:22:46.735634+00:00",
+    "config": {
+      "agent_provenance": [
+        {
+          "kind": "builtin",
+          "name": "efficiency"
+        },
+        {
+          "kind": "builtin",
+          "name": "efficiency"
+        },
+        {
+          "kind": "builtin",
+          "name": "efficiency"
+        },
+        {
+          "kind": "builtin",
+          "name": "efficiency"
+        }
+      ],
+      "agents": [
+        "efficiency",
+        "efficiency",
+        "efficiency",
+        "efficiency"
+      ],
+      "code": {
+        "package": "agari-kit",
+        "source_sha256": "e1991979d79a373ca54050786616f57ded571a8d20de326a6e66982244dd1979",
+        "version": "0.1.0"
+      },
+      "engine": {
+        "binary_sha256": "169c8c2c53bdace01e4ca319f54050565fe728a5b1b2fc6b7f3046738887071d",
+        "version": "0.4.10"
+      },
+      "games": 10000,
+      "rules": {
+        "engine_version": "0.4.10",
+        "game_mode": "4p-red-half",
+        "preset": "tenhou"
+      },
+      "schema_version": 1,
+      "seed_start": 500000,
+      "source": "agarilab-selfplay"
+    },
+    "reused": 0,
+    "started_at": "2026-10-27T18:52:43.695106+00:00",
+    "status": "complete"
+  },
+  "inputs": {
+    "acquisition.json": {
+      "path": "datasets/manifests/selfplay-10000-v1/acquisition.json",
+      "bytes": 803,
+      "sha256": "b41679ba29f5aacf30b3a212dc000a40766352decfc707845a786562d6789d11"
+    },
+    "catalog.sqlite": {
+      "path": "datasets/manifests/selfplay-10000-v1/catalog.sqlite",
+      "bytes": 7630848,
+      "sha256": "0c050c422095b502df548bcbd7a569fe252460246abf9db60453e265b4556e02"
+    },
+    "metadata.parquet": {
+      "path": "datasets/manifests/selfplay-10000-v1/metadata.parquet",
+      "bytes": 1153312,
+      "sha256": "ccea54d5757e52ae74f1b301ee4ac6225b5dd39291a90714e720994d823ff189"
+    }
+  },
+  "sqlite_integrity": "ok",
+  "sqlite_parquet_all_fields_equal": true,
+  "catalog_fields": [
+    "game_id",
+    "sha256",
+    "played_at",
+    "source",
+    "rules",
+    "usage_basis",
+    "validation",
+    "mjai_path",
+    "trace_path",
+    "validation_receipt",
+    "validation_receipt_sha256"
+  ],
+  "unique_records": 10000,
+  "unique_game_ids": 10000,
+  "unique_canonical_mjai_hashes": 10000,
+  "unique_compressed_hashes": {
+    "raw": 10000,
+    "trace": 10000,
+    "normalized": 10000
+  },
+  "seed_range": [
+    500000,
+    509999
+  ],
+  "totals": {
+    "raw_files": 10000,
+    "raw_bytes": 35630884,
+    "trace_files": 10000,
+    "trace_bytes": 291292926,
+    "normalized_files": 10000,
+    "normalized_bytes": 35758279,
+    "receipt_files": 10000,
+    "receipt_bytes": 10506496,
+    "metadata_files": 10000,
+    "metadata_bytes": 7070000,
+    "games": 10000,
+    "rounds": 98042,
+    "events": 9926889,
+    "steps": 6064610,
+    "decisions": 6142629,
+    "raw_conversion_passed": 10000,
+    "receipt_binding_passed": 10000,
+    "raw_uncompressed_bytes": 492423101,
+    "normalized_uncompressed_bytes": 492768487,
+    "trace_uncompressed_bytes": 1073788287
+  },
+  "quarantine_entries": [],
+  "quarantine_count": 0,
+  "receipt_identity_counts": [
+    {
+      "identity": {
+        "engine_binary_sha256": "169c8c2c53bdace01e4ca319f54050565fe728a5b1b2fc6b7f3046738887071d",
+        "engine_version": "0.4.10",
+        "method": "seeded-action-trace-v1",
+        "producer_code": {
+          "package": "agari-kit",
+          "source_sha256": "e1991979d79a373ca54050786616f57ded571a8d20de326a6e66982244dd1979",
+          "version": "0.1.0"
+        },
+        "rules": {
+          "engine_version": "0.4.10",
+          "game_mode": "4p-red-half",
+          "preset": "tenhou"
+        },
+        "validation": "engine-verified",
+        "validator_source_sha256": "55d4d60776cd53e342b7858f8c9a2ea4ba4c9e4a11424aca7de05a3c16f49bd4"
+      },
+      "games": 10000
+    }
+  ],
+  "score_sum_distribution": {
+    "100000": 10000
+  },
+  "final_scores_total_by_seat": [
+    253493900,
+    251095500,
+    249410900,
+    245999700
+  ],
+  "event_type_counts": {
+    "start_game": 10000,
+    "start_kyoku": 98042,
+    "tsumo": 4650456,
+    "dahai": 4628260,
+    "reach": 169434,
+    "reach_accepted": 163693,
+    "hora": 86719,
+    "end_kyoku": 98042,
+    "ryukyoku": 12243,
+    "end_game": 10000
+  },
+  "raw_conversion_rule": "Every nonterminal raw line equals normalized bytes; only last end_game gains receipt/trace-end scores.",
+  "evidence": {
+    "artifacts.jsonl": {
+      "path": "runs/selfplay-10000-v1-audit/artifacts.jsonl",
+      "bytes": 12185128,
+      "sha256": "04c8a7b9ea868ca75ff61faec5b2d8e2affa6a20e2b09feb5307971a45705444"
+    },
+    "raw-sha256.jsonl": {
+      "path": "runs/selfplay-10000-v1-audit/raw-sha256.jsonl",
+      "bytes": 2519967,
+      "sha256": "47027c39de4c65ecdc6a6355680355d3b10c161a8014464f9aedae673786829b"
+    }
+  }
+}
