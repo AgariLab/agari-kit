@@ -14,7 +14,7 @@ jobs:
   engine:
     runs-on: ubuntu-latest
     env:
-      AGARILAB_STORAGE_ROOT: ${{ github.workspace }}/../agari-ci-storage
+      AGARILAB_STORAGE_ROOT: ${{ runner.temp }}/agari-storage
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
