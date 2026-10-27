@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=75,<82"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agari-kit"
+version = "0.1.0"
+description = "Reproducible Riichi Mahjong agents, data and evaluation tools"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = "Apache-2.0"
+dependencies = ["riichienv==0.4.10", "websockets==15.0.1", "polars==1.37.1"]
+
+[project.scripts]
+agari = "agari_kit.cli:main"
+
+[[tool.uv.index]]
+name = "tsinghua"
+url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
+default = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
