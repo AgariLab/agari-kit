@@ -68,6 +68,7 @@ class AkochanTests(unittest.TestCase):
             "config=json.loads(Path(sys.argv[2]).read_text())\n"
             "Path('pid').write_text(str(os.getpid()))\n"
             "Path('pgrp').write_text(str(os.getpgrp()))\n"
+            "Path('token_present').write_text(str('RIICHI_BOT_TOKEN' in os.environ))\n"
             "if config.get('descendant'):\n"
             " child=subprocess.Popen([sys.executable,'-c', 'import signal,time; signal.signal(signal.SIGTERM,signal.SIG_IGN); time.sleep(60)'])\n"
             " Path('child_pid').write_text(str(child.pid))\n"
@@ -247,6 +248,21 @@ class AkochanTests(unittest.TestCase):
         with self.assertRaises(TimeoutError):
             agent.act(initial(), Context(0, 2026, deadline=0))
         self.assertFalse((self.checkout / "pid").exists())
+
+    def test_online_token_does_not_reach_native_process(self):
+        with patch.dict(os.environ, RIICHI_BOT_TOKEN="test-only-not-a-token"):
+            agent = self.make()
+            agent.act(initial(), Context(0, 2026))
+            self.assertEqual((self.checkout / "token_present").read_text(), "False")
+            self.assertEqual(os.environ["RIICHI_BOT_TOKEN"], "test-only-not-a-token")
+
+    def test_non_dora_event_after_trigger_is_not_guessed(self):
+        agent = self.make()
+        obs = initial()
+        obs.events.append(json.dumps({"type": "reach_accepted", "actor": 2}))
+        with self.assertRaisesRegex(AkochanError, "cannot decide"):
+            agent.act(obs, Context(0, 2026))
+
 
     def test_unsolicited_second_response_is_rejected(self):
         self.config_data["extra"] = True

@@ -1,0 +1,52 @@
+{
+  "steps": 536,
+  "decisions": 540,
+  "scores": [
+    38500,
+    21600,
+    26100,
+    13800
+  ],
+  "validation": {
+    "sha256": "09ef2885858199605f59806600e321e9b897048d690b03ee800100cf7a180e59",
+    "events": 896,
+    "rounds": 9,
+    "scores": [
+      38500,
+      21600,
+      26100,
+      13800
+    ],
+    "validation": "engine-verified",
+    "schema_version": 1,
+    "mjai_file_sha256": "24c92a79724c87b0b109b8b2e45e602a36db9a59a712365f04fc800726a80f97",
+    "validator_source_sha256": "55d4d60776cd53e342b7858f8c9a2ea4ba4c9e4a11424aca7de05a3c16f49bd4",
+    "method": "seeded-action-trace-v1",
+    "engine_version": "0.4.10",
+    "rules": {
+      "game_mode": "4p-red-half",
+      "preset": "tenhou",
+      "engine_version": "0.4.10"
+    },
+    "engine_binary_sha256": "169c8c2c53bdace01e4ca319f54050565fe728a5b1b2fc6b7f3046738887071d",
+    "trace_sha256": "83623b38178ccbf1c6fe70077b6505ccb95ff7d4d5182eae5a96d9ebc16c5800",
+    "seed": 2026,
+    "steps": 536,
+    "decisions": 540,
+    "producer_code": {
+      "package": "agari-kit",
+      "source_sha256": "798330f65ec4af3ae8ee279ed76d7c96573bfe62a9c711f884a8456b19309ddd",
+      "version": "0.1.0"
+    },
+    "checks": {
+      "complete_event_structure": true,
+      "action_legality": true,
+      "tile_counts": true,
+      "final_scores": true,
+      "all_mjai_events": true,
+      "observation_hashes": true,
+      "player_information_boundary": true
+    }
+  },
+  "elapsed_seconds": 46.76186383399181
+}

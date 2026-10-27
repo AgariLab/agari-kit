@@ -87,7 +87,7 @@ def discard(env, seat, tile):
     return env.step({seat: action(env, seat, ActionType.DISCARD, tile=tile)})
 
 
-def chankan_position():
+def chankan_position(*, capture_observations=None, game_mode="4p-red-single"):
     """Legal pon -> daiminkan -> kakan sequence, retaining an obsolete chi action."""
     ready = [40, 44, 48, 4, 8, 12, 89, 92, 76, 80, 84, 108, 109]
     hands = [[], [tile for tile in ready if tile != 48] + [132], [], []]
@@ -102,7 +102,7 @@ def chankan_position():
     wall = deal + [120, 0, 1, 48, 2, 3, 36] + pool + [99]
     if sorted(wall) != list(range(136)):
         raise AssertionError("Broken chankan fixture")
-    env = RiichiEnv("4p-red-single", seed=42, rule=GameRule.default_tenhou())
+    env = RiichiEnv(game_mode, seed=42, rule=GameRule.default_tenhou())
     env.reset(wall=wall, oya=0)
 
     def claim(seat, kind):
@@ -125,7 +125,9 @@ def chankan_position():
     claim(2, ActionType.DAIMINKAN)
     if env.drawn_tile != 99:
         raise AssertionError("Unexpected rinshan tile")
-    env.step({2: action(env, 2, ActionType.KAKAN, tile=99)})
+    observations = env.step({2: action(env, 2, ActionType.KAKAN, tile=99)})
+    if capture_observations is not None:
+        capture_observations.update(observations)
     return env, obsolete_chi
 
 

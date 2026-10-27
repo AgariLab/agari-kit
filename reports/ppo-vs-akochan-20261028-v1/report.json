@@ -1,0 +1,48 @@
+{
+  "games": 4,
+  "seed_groups": 1,
+  "candidate": {
+    "mean_rank": 3,
+    "rank_rates": [
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    "mean_point_delta": -5950
+  },
+  "ci95": {
+    "mean_rank": null,
+    "mean_point_delta": null,
+    "rank_1_rate": null,
+    "rank_2_rate": null,
+    "rank_3_rate": null,
+    "rank_4_rate": null
+  },
+  "ci_method": "seed-group-percentile-bootstrap",
+  "bootstrap_seed": 0,
+  "bootstrap_samples": 2000,
+  "promotion_sample_size_met": false,
+  "candidate_decisions": 626,
+  "candidate_latency_ms_mean": 0.272821065019102,
+  "candidate_latency_ms_p95": 0.4111669259145856,
+  "candidate_latency_ms_max": 12.978499988093972,
+  "latency_scope": "agent.act only; candidate seat isolated; excludes loading and transport",
+  "event_counts": {
+    "start_game": 4,
+    "start_kyoku": 36,
+    "tsumo": 1932,
+    "dahai": 1937,
+    "pon": 10,
+    "ryukyoku": 9,
+    "end_kyoku": 36,
+    "reach": 37,
+    "reach_accepted": 37,
+    "hora": 27,
+    "end_game": 4,
+    "chi": 3
+  },
+  "illegal_actions": 0,
+  "decisions": 2485,
+  "elapsed_seconds": 255.78991954086814
+}

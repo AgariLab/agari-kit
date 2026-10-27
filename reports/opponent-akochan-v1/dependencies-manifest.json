@@ -1,0 +1,49 @@
+{
+  "layout": "links to verified external package cache; conda prefix creation interrupted to avoid duplicated headers",
+  "packages": [
+    {
+      "name": "libboost-headers",
+      "version": "1.85.0",
+      "build": "hce30654_4",
+      "build_number": 4,
+      "channel": "https://conda.anaconda.org/conda-forge/osx-arm64",
+      "subdir": "osx-arm64",
+      "fn": "libboost-headers-1.85.0-hce30654_4.conda",
+      "md5": "e4da2f0886a3029ec3b7274b13a54714",
+      "url": "https://conda.anaconda.org/conda-forge/osx-arm64/libboost-headers-1.85.0-hce30654_4.conda",
+      "sha256": "52c298c34a25960f48aef00981934808b70953f046abb08076f6005e2df83d22",
+      "arch": "arm64",
+      "platform": "darwin",
+      "depends": [],
+      "constrains": [
+        "boost-cpp 1.85.0*"
+      ],
+      "license": "BSL-1.0",
+      "timestamp": 1722291288000,
+      "size": 14130145
+    },
+    {
+      "name": "llvm-openmp",
+      "version": "18.1.8",
+      "build": "h31f6cbb_2",
+      "build_number": 2,
+      "channel": "https://conda.anaconda.org/conda-forge/osx-arm64",
+      "subdir": "osx-arm64",
+      "fn": "llvm-openmp-18.1.8-h31f6cbb_2.conda",
+      "md5": "8ccb672188f6eba5b966572a554afe00",
+      "url": "https://conda.anaconda.org/conda-forge/osx-arm64/llvm-openmp-18.1.8-h31f6cbb_2.conda",
+      "sha256": "992603401c59a2aab5528da36f281105fb71fe883124377b860ef05b86471201",
+      "arch": "arm64",
+      "platform": "darwin",
+      "depends": [
+        "__osx >=11.0"
+      ],
+      "constrains": [
+        "openmp 18.1.8|18.1.8.*"
+      ],
+      "license": "Apache-2.0 WITH LLVM-exception",
+      "timestamp": 1743207471000,
+      "size": 279236
+    }
+  ]
+}

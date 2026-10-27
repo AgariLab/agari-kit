@@ -26,6 +26,9 @@ def fixture_worker(connection, behavior):
                 time.sleep(30)
             elif behavior == "exit":
                 break
+            elif behavior == "credentials":
+                connection.send({"status": "ok", "request_id": request.request_id,
+                                 "action": {"type": "none", "bot_token_present": "RIICHI_BOT_TOKEN" in os.environ}})
             else:
                 connection.send({"status": "ok", "request_id": request.request_id,
                                  "action": {"type": "none"}})
@@ -103,6 +106,18 @@ def process_is_running(pid):
 
 
 class WorkerTests(unittest.IsolatedAsyncioTestCase):
+    async def test_agent_does_not_inherit_matchmaking_credentials(self):
+        with patch.dict(os.environ, {"RIICHI_BOT_TOKEN": "fixture-secret"}):
+            runner = ProcessRunner("credentials", worker_target=fixture_worker)
+            try:
+                await runner.start()
+                request = Request(0, "test", [{"type": "none"}], time.monotonic() + 1, "test")
+                reply = await runner.decide(request, Context(0, 0))
+                self.assertFalse(reply["bot_token_present"])
+                self.assertEqual(os.environ["RIICHI_BOT_TOKEN"], "fixture-secret")
+            finally:
+                await runner.close()
+
     async def test_same_worker_serves_multiple_decisions(self):
         runner = ProcessRunner("normal", worker_target=fixture_worker)
         await runner.start()

@@ -60,6 +60,8 @@ def _terminate_worker(signum, frame) -> None:
 def _worker_entry(connection, agent_name: str, target) -> None:
     """Establish ownership before an agent can launch external processes."""
     try:
+        # Matchmaking credentials belong to the transport, never to an Agent.
+        os.environ.pop("RIICHI_BOT_TOKEN", None)
         pid = os.getpid()
         group = None
         if os.name == "posix":

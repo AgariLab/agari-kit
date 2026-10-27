@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "external_root": "/Volumes/新加卷/AgariLab/runs/opponent-akochan-v1",
+  "source_commit": "53188a0b926fbab38177f88c3cd87d554cf412af",
+  "source_license": "upstream custom license; private local research only in this run",
+  "files": {
+    "build-manifest.json": {
+      "bytes": 6572,
+      "sha256": "3d7a7fd9cd8d99bfd5f703d972e8ff77491dcd15b7a5341baa6c6d29f188cf0f",
+      "copied_to_repository": true
+    },
+    "dependencies-manifest.json": {
+      "bytes": 1657,
+      "sha256": "18662904f5de009f2fbc3896f9f4eb3fd318fc82f3e359e7d10645be5d473cfc",
+      "copied_to_repository": true
+    },
+    "probe-seed2026-half-v2/report.json": {
+      "bytes": 1183,
+      "sha256": "318188c083234238cf75229641d1df056a4a1084f18fda845a900975c03c60b2",
+      "copied_to_repository": true
+    },
+    "fullgame-seed2026-v1/report.json": {
+      "bytes": 1469,
+      "sha256": "122ad5a9dfa9740815602a7813a15d5731f0a0a083ff5b18fb48932e9c3623de",
+      "copied_to_repository": true
+    },
+    "evaluation-seed2026-v1/manifest.json": {
+      "bytes": 3908,
+      "sha256": "82778ecc4cf93ac88eabecff4b7cf47f326e70f3b57f65f5703844364a590921",
+      "copied_to_repository": true
+    },
+    "evaluation-seed2026-v1/games.jsonl": {
+      "bytes": 2953,
+      "sha256": "71dc5e7d6efe9691398ad50c9896cc24f303c1270912d3c6b4fccb4894d82c5e",
+      "copied_to_repository": true
+    },
+    "evaluation-seed2026-v1/report.json": {
+      "bytes": 1100,
+      "sha256": "1b7d4ccf11dd75b3544023468d283dc5c0266867121dfac6795c5cb049954bf9",
+      "copied_to_repository": true
+    },
+    "agent.json": {
+      "bytes": 677,
+      "sha256": "67dda758e7f1942e5d33983ebd406f63247400b5a2a428ce30a19d57c6a98aca",
+      "copied_to_repository": false
+    },
+    "runtime-manifest.json": {
+      "bytes": 126692,
+      "sha256": "c52066260f2fd5de799711cd44da8e84bc9997136210bbbf15c2fb3d044210bb",
+      "copied_to_repository": false
+    },
+    "source-manifest.json": {
+      "bytes": 100798,
+      "sha256": "dac95f71c66ef97404e6bfcbf3ac6cdd4c3d34dcaa407fb35de7729d97b685b6",
+      "copied_to_repository": false
+    },
+    "LICENSE.upstream.txt": {
+      "bytes": 1659,
+      "sha256": "73d32d37160ecee5893b00ada91a3ca63eaa2f550ca5bb827c571043c0af910a",
+      "copied_to_repository": false
+    },
+    "akochan-source.tar.gz": {
+      "bytes": 188017,
+      "sha256": "18cdb32872fcf90f9eb1c5b5dca87eb57abe8fa1b6954d0d81e4b9be2c70a910",
+      "copied_to_repository": false
+    },
+    "fullgame-seed2026-v1/raw.jsonl.gz": {
+      "bytes": 3339,
+      "sha256": "c37dd21ad49130211be5feb3087f2f6b673fe26e80ec4615f4147bfc514bda33",
+      "copied_to_repository": false
+    },
+    "fullgame-seed2026-v1/mjai.jsonl.gz": {
+      "bytes": 3351,
+      "sha256": "24c92a79724c87b0b109b8b2e45e602a36db9a59a712365f04fc800726a80f97",
+      "copied_to_repository": false
+    },
+    "fullgame-seed2026-v1/trace.jsonl.gz": {
+      "bytes": 26415,
+      "sha256": "83623b38178ccbf1c6fe70077b6505ccb95ff7d4d5182eae5a96d9ebc16c5800",
+      "copied_to_repository": false
+    },
+    "chankan-delayed-dora-v2/report.json": {
+      "bytes": 1459,
+      "sha256": "7e7720d14a1adb13943eecb9f528ccbbb660ed229a5715a7a86d879026fde71f",
+      "copied_to_repository": true
+    },
+    "fullgame-seed2027-v2/report.json": {
+      "bytes": 1495,
+      "sha256": "b922e603695efb91043e08458445d8314e6925d2707ab23ffd0a958fd08c4cec",
+      "copied_to_repository": true
+    },
+    "fullgame-seed2027-v2/raw.jsonl.gz": {
+      "bytes": 2983,
+      "sha256": "a5c059a3f82ba57700c817d48e696132c8a3ae77b301e37dfdca8ac519e98da4",
+      "copied_to_repository": false
+    },
+    "fullgame-seed2027-v2/mjai.jsonl.gz": {
+      "bytes": 2999,
+      "sha256": "5a58127c93f9eef4f6bf10d74982d5379d764fd28007c1ec7a319eef03f67199",
+      "copied_to_repository": false
+    },
+    "fullgame-seed2027-v2/trace.jsonl.gz": {
+      "bytes": 22917,
+      "sha256": "449238b16aff92ff3213ca627bd3cdd5f6dc25e8f200d5c4d1e8046d4fcc713d",
+      "copied_to_repository": false
+    }
+  },
+  "unit_tests": {
+    "akochan": 19,
+    "sandbox_limitation": "3 worker process-status checks blocked by sandbox ps; worker suite 10/10 passed with required process visibility",
+    "all_unit_before_followup": 82
+  },
+  "real_worker_probe": {
+    "decision": {
+      "type": "dahai",
+      "actor": 0,
+      "pai": "N",
+      "tsumogiri": true
+    },
+    "elapsed_seconds": 0.2648504169192165,
+    "closed": true
+  },
+  "followup": "After the four-seat smoke: allow pure delayed-dora suffix in original wire order, remove RIICHI_BOT_TOKEN from native process environment. Native real-binary fixture and seed2027 complete-game replay passed; four-seat smoke retains its original source fingerprint.",
+  "integration_tests": {
+    "native_akochan": 1,
+    "rule_regressions": 18,
+    "rule_regressions_expected_failures": 1
+  }
+}

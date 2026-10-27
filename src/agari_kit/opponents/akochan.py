@@ -97,6 +97,7 @@ class AkochanAgent:
         inherited = os.environ.get("AGARILAB_AGENT_PROCESS_GROUP") == str(os.getpgrp())
         self._owns_group = not inherited
         environment = os.environ.copy()
+        environment.pop("RIICHI_BOT_TOKEN", None)
         environment.update(OMP_NUM_THREADS=str(self.threads), OMP_THREAD_LIMIT=str(self.threads))
         self._process = subprocess.Popen(
             [str(self.binary), "pipe", str(self.config), str(self._context.player_id)],
@@ -259,16 +260,25 @@ class AkochanAgent:
         if not legal:
             raise AkochanError("No legal decision is available")
         final = events[-1]
-        trigger = ((final["type"] == "tsumo" and final.get("actor") == context.player_id)
-                   or (final["type"] in ("dahai", "kakan") and final.get("actor") != context.player_id))
+        trigger_index = len(events) - 1
+        while trigger_index >= 0 and events[trigger_index]["type"] == "dora":
+            trigger_index -= 1
+        decision = events[trigger_index] if trigger_index >= 0 else {}
+        trigger = ((decision.get("type") == "tsumo" and decision.get("actor") == context.player_id)
+                   or (decision.get("type") in ("dahai", "kakan") and decision.get("actor") != context.player_id))
         if not trigger:
             # The original pipe does not request responses to opponent ankan.
             # A mandatory pass is exact; a possible kokushi chankan is unsupported.
-            if len(legal) == 1 and json.loads(legal[0].to_mjai())["type"] == "none":
+            if (final["type"] == "ankan" and final.get("actor") != context.player_id
+                    and len(legal) == 1 and json.loads(legal[0].to_mjai())["type"] == "none"):
                 self._write(events, deadline)
                 return legal[0]
             raise AkochanError("Original Akochan pipe cannot decide on this event")
-        final["can_act"] = True
+        # A prior kan's delayed dora can follow a new kakan's chankan trigger.
+        # Preserve wire order: the original pipe decides at kakan, then consumes
+        # trailing dora without deciding again. It does not use that late dora
+        # in this decision; never reorder or duplicate native events to fake it.
+        decision["can_act"] = True
         self._write(events, deadline)
         moves = self._read(deadline)
         action = self._match(moves[0], observation, events)

@@ -48,10 +48,15 @@ Akochan 的命令行入口如下；来自固定提交的 [main.cpp](https://gith
 | `agent.json` | `agari_kit.opponents.akochan:AkochanAgent` 的公开 `@descriptor` 入口，绑定 binary/config/manifest 内容哈希，2 线程、单决策最长 30 秒；SHA-256 `67dda758e7f1942e5d33983ebd406f63247400b5a2a428ce30a19d57c6a98aca` |
 | `probe-seed2026-half-v2/report.json` | 真实初始玩家观察、半庄规则、严格合法弃牌；该次含启动耗时约 91.9 ms，进程峰值 16,875,520 bytes。早期 `probe-seed2026` 将 `kyoku_first` 错设为东风，仅保留为错误假设记录，不能作为半庄验收证据 |
 | `fullgame-seed2026-v1/report.json` | 对三个 efficiency 代理的一场半庄：9 局、540 决策、约 46.76 秒，分数 `[38500,21600,26100,13800]`；候选实际走通 4 次立直、2 次碰牌、3 次和牌。原生 trace 重放结果 `engine-verified`，canonical MJAI SHA-256 `09ef2885858199605f59806600e321e9b897048d690b03ee800100cf7a180e59` |
+| `evaluation-seed2026-v1/report.json` | 公开 evaluate 四座位轮转全部完成：37 局、2,190 次总决策、0 非法动作；候选 549 次决策 mean 381.96 ms、p95 1,084.36 ms、max 1,859.30 ms。仅 1 个 seed 组，CI 为 null、未达到晋级样本门槛；约 210 秒运行时间 |
+| `chankan-delayed-dora-v2/report.json` | 连续开杠的原生合法 136 牌墙 fixture，原生观察末尾确为 `kakan,dora`；原版 AI 实际返回合法抢杠和（实体牌 99），赢家 25,000→30,200、加杠者 25,000→19,800，约 183.8 ms |
+| `fullgame-seed2027-v2/report.json` | 定向修复后的真实半庄，8 局、464 决策、约 43.55 秒；分数 `[30600,23700,29200,16500]`，`engine-verified` 且运行期间代码指纹未变。canonical MJAI SHA-256 `5ba86d1b1bfe04479c687c4a83c9d514561076e86b2318196cd4ed7bc4302e4e` |
 
 规则映射严格采用上游 `mjai_client.cpp`：`kyoku_first=0` 表示半庄，`4` 表示东风，`aka_flag=true`。适配器只消费玩家 `new_events()`，再次投影隐藏牌；固定 0.4.10 的实际 Rust 实现中它与 `events` 是同一原生增量，旧 `.pyi` 的历史游标注释不能作为行为依据。所有参数会在构造、reset 和每次决策前重新核验，因为上游会在计算过程中按需读取参数文件。玩家 deadline 包括核验、启动与读写，不能因首次初始化而重置。原版 pipe 不会对他家暗杠触发计算；只有原生唯一合法动作为 pass 时可以直接跳过，有国士抢暗杠机会时明确失败，不会替换动作或冒记为 Akochan 决策。
 
-17 项自有适配测试覆盖可见事件边界、东／半庄映射、立直与碰牌队列、竞争鸣牌失效、赤牌与摸切、参数篡改、严格超时、额外 stdout、进程退出和后代清理。在线 worker 拥有整个进程组时适配器继承该组，独立使用时另开组并在 `close()` 终止整个子进程组；公共 Agent 生命周期负责显式关闭。
+19 项仅依赖标准库的单元测试和 1 项原生引擎集成测试覆盖可见事件边界、东／半庄映射、立直与碰牌队列、竞争鸣牌失效、赤牌与摸切、参数篡改、严格超时、额外 stdout、延后宝牌、进程退出和后代清理。外部原版进程不会继承 `RIICHI_BOT_TOKEN`。在线 worker 拥有整个进程组时适配器继承该组，独立使用时另开组并在 `close()` 终止整个子进程组；公共 Agent 生命周期负责显式关闭。
+
+上述完整四座位轮转只验证接口，不能据此宣称已战胜某种强度或已满足真实平台时限。连续开杠后 `kakan,dora` 结尾的原生窗口另有定向修复和真实原版验收：仅允许决策事件后出现纯 `dora` 通知，保持原顺序、只在 `kakan` 标记 `can_act:true`；原版 AI 会在 `kakan` 处决定，然后消费末尾宝牌，故该次决定不使用这条延后宝牌。任何其他后续 gameplay 事件都明确拒绝，不能重排或重复事件来伪造状态。四座位报告保留修复前的真实源码指纹，修复后另外留存 native fixture 和 seed 2027 半庄报告。可分享的薄报告见 [opponent-akochan-v1](../reports/opponent-akochan-v1/README.md)，不含原版源码或参数。
 
 真实平台的官方边界与技术差异如下。平台条款与协议实现来源分开列出；社区客户端源码只能证明一种技术实现存在，不能证明平台授权。
 

@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "fixture": "legal 136-tile wall pon -> daiminkan -> kakan with pending dora",
+  "fixture_source_sha256": "e30178dd80912f42baab2e4790ddd684552c79e85df64baf422a92af50119d0a",
+  "rules": {
+    "game_mode": "4p-red-half",
+    "preset": "tenhou"
+  },
+  "engine": {
+    "version": "0.4.10",
+    "binary_sha256": "169c8c2c53bdace01e4ca319f54050565fe728a5b1b2fc6b7f3046738887071d"
+  },
+  "code": {
+    "package": "agari-kit",
+    "version": "0.1.0",
+    "source_sha256": "e1991979d79a373ca54050786616f57ded571a8d20de326a6e66982244dd1979"
+  },
+  "native_delta_tail": [
+    {
+      "actor": 2,
+      "consumed": [
+        "7s",
+        "7s",
+        "7s"
+      ],
+      "pai": "7s",
+      "type": "kakan"
+    },
+    {
+      "dora_marker": "F",
+      "type": "dora"
+    }
+  ],
+  "native_legal_actions": [
+    {
+      "type": 4,
+      "tile": 99,
+      "consume_tiles": [],
+      "actor": 1
+    },
+    {
+      "type": 7,
+      "tile": null,
+      "consume_tiles": [],
+      "actor": 1
+    }
+  ],
+  "selected_action": {
+    "type": 4,
+    "tile": 99,
+    "consume_tiles": [],
+    "actor": 1
+  },
+  "scores_before": [
+    25000,
+    25000,
+    25000,
+    25000
+  ],
+  "scores_after": [
+    25000,
+    30200,
+    19800,
+    25000
+  ],
+  "elapsed_seconds": 0.18376099993474782,
+  "protocol": "kakan can_act=true, trailing dora can_act=false; unchanged native wire order. Original AI decides before consuming trailing dora."
+}

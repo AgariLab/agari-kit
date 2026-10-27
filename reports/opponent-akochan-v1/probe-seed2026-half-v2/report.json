@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "status": "passed",
+  "seed": 2026,
+  "player": 0,
+  "rules": {
+    "game_mode": "4p-red-half",
+    "preset": "tenhou"
+  },
+  "kyoku_first": 0,
+  "threads": 2,
+  "command": [
+    "/Volumes/新加卷/AgariLab/runs/opponent-akochan-v1/akochan-53188a0b926fbab38177f88c3cd87d554cf412af/system.exe",
+    "pipe",
+    "/Volumes/新加卷/AgariLab/runs/opponent-akochan-v1/akochan-53188a0b926fbab38177f88c3cd87d554cf412af/setup_mjai.json",
+    "0"
+  ],
+  "binary_sha256": "2a257e14973093810caf1752823e0a79b51560a1a48d309caa2d908cf8038c5d",
+  "settings_sha256": "0e69033ad71c72c275156fd1dae388b7a16e6ce904bdaf27d6f57f8a5573a8d1",
+  "input_sha256": "04a458f6f1996bf3799ab779fbb817d9d53405e3c3d90fe6f627af8773b6bc14",
+  "elapsed_seconds_including_process_startup": 0.09191283397376537,
+  "peak_child_rss_bytes": 16875520,
+  "returned_moves": [
+    {
+      "actor": 0,
+      "pai": "N",
+      "tsumogiri": true,
+      "type": "dahai"
+    }
+  ],
+  "strict_native_matches": [
+    {
+      "type": 0,
+      "tile": 123,
+      "consume_tiles": [],
+      "actor": 0
+    }
+  ],
+  "limitations": "One initial dealer decision; not a complete-game adapter or strength result"
+}
