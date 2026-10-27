@@ -1,0 +1,70 @@
+{
+  "games": 1000,
+  "seed_groups": 250,
+  "candidate": {
+    "mean_rank": 2.558,
+    "rank_rates": [
+      0.031,
+      0.562,
+      0.225,
+      0.182
+    ],
+    "mean_point_delta": -7214.6
+  },
+  "ci95": {
+    "mean_rank": [
+      2.506,
+      2.61
+    ],
+    "mean_point_delta": [
+      -8002.5,
+      -6434
+    ],
+    "rank_1_rate": [
+      0.019,
+      0.044
+    ],
+    "rank_2_rate": [
+      0.529,
+      0.595
+    ],
+    "rank_3_rate": [
+      0.199,
+      0.253
+    ],
+    "rank_4_rate": [
+      0.158,
+      0.207
+    ]
+  },
+  "ci_method": "seed-group-percentile-bootstrap",
+  "bootstrap_seed": 0,
+  "bootstrap_samples": 2000,
+  "promotion_sample_size_met": false,
+  "candidate_decisions": 185272,
+  "candidate_latency_ms_mean": 0.11618473016562693,
+  "candidate_latency_ms_p95": 0.17166603356599808,
+  "candidate_latency_ms_max": 1.8383749993517995,
+  "latency_scope": "agent.act only; candidate seat isolated; excludes loading and transport",
+  "event_counts": {
+    "start_game": 1000,
+    "start_kyoku": 9368,
+    "tsumo": 553012,
+    "dahai": 563547,
+    "reach": 7321,
+    "reach_accepted": 7284,
+    "hora": 5022,
+    "end_kyoku": 9368,
+    "chi": 7997,
+    "ryukyoku": 4353,
+    "pon": 3934,
+    "end_game": 1000,
+    "ankan": 151,
+    "dora": 526,
+    "kakan": 123,
+    "daiminkan": 252
+  },
+  "illegal_actions": 0,
+  "decisions": 707625,
+  "elapsed_seconds": 64.88888986315578
+}
