@@ -57,10 +57,11 @@ class EvaluationTests(unittest.TestCase):
                 list(schedule(seeds, ["random"] * 4))
 
     def fake_runtime(self, stack, make_agent):
-        stack.enter_context(patch("agari_kit.evaluation.make_agent", side_effect=make_agent))
+        stack.enter_context(patch("agari_kit.agent.make_agent", side_effect=make_agent))
         stack.enter_context(patch("agari_kit.evaluation.new_environment", side_effect=OneDecisionEnvironment))
         stack.enter_context(patch("agari_kit.evaluation.ensure_legal", side_effect=lambda action, obs: action))
         stack.enter_context(patch("agari_kit.engine.require_engine", return_value="0.4.10"))
+        stack.enter_context(patch("agari_kit.evaluation.engine_identity", return_value={"version": "0.4.10", "binary_sha256": "fixture"}))
 
     def test_candidate_latency_excludes_opponents_and_tracks_rotated_seat(self):
         clock = [0.0]
@@ -83,6 +84,7 @@ class EvaluationTests(unittest.TestCase):
             report = evaluate([0], ["efficiency", "random", "random", "random"], path)
             manifest = json.loads((path / "manifest.json").read_text())
             self.assertEqual(manifest["status"], "complete")
+            self.assertEqual(manifest["engine"]["binary_sha256"], "fixture")
             self.assertEqual(manifest["lineup_provenance"][0], {"kind": "builtin", "name": "efficiency"})
             self.assertEqual(report["candidate_decisions"], 4)
             self.assertAlmostEqual(report["candidate_latency_ms_p95"], 1)
@@ -94,7 +96,7 @@ class EvaluationTests(unittest.TestCase):
                 self.assertAlmostEqual(row["latency_ms_max"], 10)
 
     def test_artifact_or_source_change_during_load_stops_before_play(self):
-        for changed in ("artifact", "source"):
+        for changed in ("artifact", "source", "engine"):
             calls = [0]
 
             class Agent:
@@ -111,10 +113,14 @@ class EvaluationTests(unittest.TestCase):
             def source():
                 return {"source_sha256": "changed" if changed == "source" and calls[0] > 4 else "initial"}
 
+            def engine():
+                return {"version": "0.4.10", "binary_sha256": "changed" if changed == "engine" and calls[0] > 4 else "initial"}
+
             with self.subTest(changed=changed), tempfile.TemporaryDirectory() as temporary, ExitStack() as stack:
                 self.fake_runtime(stack, load)
                 stack.enter_context(patch("agari_kit.evaluation.agent_provenance", side_effect=provenance))
                 stack.enter_context(patch("agari_kit.evaluation.source_fingerprint", side_effect=source))
+                stack.enter_context(patch("agari_kit.evaluation.engine_identity", side_effect=engine))
                 path = Path(temporary) / "evaluation"
                 with self.assertRaisesRegex(ValueError, "artifacts or source changed"):
                     evaluate([0], ["efficiency", "random", "random", "random"], path)

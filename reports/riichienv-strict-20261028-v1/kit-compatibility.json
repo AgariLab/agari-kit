@@ -1,0 +1,20 @@
+{
+  "python_executable": "/Volumes/新加卷/AgariLab/runs/riichienv-strict-tsumogiri-20261028/venv/bin/python",
+  "engine_file": "/Volumes/新加卷/AgariLab/runs/riichienv-strict-tsumogiri-20261028/venv/lib/python3.12/site-packages/riichienv/__init__.py",
+  "modules": [
+    "/Users/zhou/MyCodes/AgariLab/agari-kit/tests/integration/test_rules.py",
+    "/Users/zhou/MyCodes/AgariLab/agari-kit/tests/integration/test_engine.py",
+    "/Users/zhou/MyCodes/AgariLab/agari-kit/tests/test_agent.py",
+    "/Users/zhou/MyCodes/AgariLab/agari-kit/tests/test_online.py",
+    "/Users/zhou/MyCodes/AgariLab/agari-kit/tests/test_worker.py"
+  ],
+  "baseline_expected_failure_promoted_to_assertion": "test_upstream_mjai_mapper_rejects_inconsistent_tsumogiri",
+  "tests_run": 47,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "expected_failures": 0,
+  "unexpected_successes": 0,
+  "success": true,
+  "kit_source_commit": "5dc8cbea09f6bcb82dc83b64c8916e84c667ba0c"
+}

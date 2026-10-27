@@ -16,9 +16,9 @@ from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .agent import Context, Rules, ensure_legal, make_agent
+from .agent import Context, Rules, ensure_legal, managed_agents
 from .dataset import Catalog, freeze_split, make_split
-from .engine import new_environment, require_engine
+from .engine import new_environment, require_engine, engine_identity
 from .mjai import DataError, canonical_json, inspect_game, read_events
 from .plugins import agent_provenance
 from .provenance import source_fingerprint
@@ -78,43 +78,43 @@ def record_game(*, seed: int, agents: list[str], raw_path: Path, mjai_path: Path
     producer_code = source_fingerprint() if producer_code is None else producer_code
     provenance = [agent_provenance(name) for name in agents] if provenance is None else provenance
     env = new_environment(seed)
-    policies = [make_agent(name) for name in agents]
-    if [agent_provenance(name) for name in agents] != provenance:
-        raise DataError("Agent configuration, weights or source changed while loading")
-    contexts = [Context(seat, seed) for seat in range(4)]
-    for policy, context in zip(policies, contexts):
-        policy.reset(context)
-    observations = env.reset()
-    step = decisions = 0
-    with compressed_writer(trace_path) as stream:
-        stream.write(canonical_json({"schema_version": 1, "type": "agari_trace", "seed": seed,
-                                     "rules": asdict(Rules()), "agents": agents,
-                                     "agent_provenance": provenance,
-                                     "code": producer_code}) + "\n")
-        while not env.done():
-            if not observations or step >= max_steps:
-                raise DataError("Self-play stalled or exceeded the step limit")
-            observation_hashes = {str(seat): hashlib.sha256(obs.serialize_to_base64().encode()).hexdigest()
-                                  for seat, obs in observations.items()}
-            selected = {seat: ensure_legal(policies[seat].act(obs, contexts[seat]), obs)
-                        for seat, obs in observations.items()}
-            stream.write(canonical_json({"step": step,
-                                         "actions": {str(seat): action.to_dict() for seat, action in selected.items()},
-                                         "observations_sha256": observation_hashes}) + "\n")
-            observations = env.step(selected)
-            step += 1
-            decisions += len(selected)
-        scores = list(env.scores())
-        stream.write(canonical_json({"type": "trace_end", "steps": step, "scores": scores}) + "\n")
-    events = list(env.mjai_log)
-    # Preserve the engine log verbatim, then normalize end-game scores from
-    # the terminal engine state. The raw file is never overwritten by conversion.
-    write_events(raw_path, events)
-    if not events or events[-1].get("type") != "end_game":
-        raise DataError("Engine did not emit end_game")
-    events[-1] = dict(events[-1], scores=scores)
-    write_events(mjai_path, events)
-    return {"steps": step, "decisions": decisions, "scores": scores}
+    with managed_agents(agents) as policies:
+        if [agent_provenance(name) for name in agents] != provenance:
+            raise DataError("Agent configuration, weights or source changed while loading")
+        contexts = [Context(seat, seed) for seat in range(4)]
+        for policy, context in zip(policies, contexts):
+            policy.reset(context)
+        observations = env.reset()
+        step = decisions = 0
+        with compressed_writer(trace_path) as stream:
+            stream.write(canonical_json({"schema_version": 1, "type": "agari_trace", "seed": seed,
+                                         "rules": asdict(Rules()), "agents": agents,
+                                         "agent_provenance": provenance,
+                                         "code": producer_code}) + "\n")
+            while not env.done():
+                if not observations or step >= max_steps:
+                    raise DataError("Self-play stalled or exceeded the step limit")
+                observation_hashes = {str(seat): hashlib.sha256(obs.serialize_to_base64().encode()).hexdigest()
+                                      for seat, obs in observations.items()}
+                selected = {seat: ensure_legal(policies[seat].act(obs, contexts[seat]), obs)
+                            for seat, obs in observations.items()}
+                stream.write(canonical_json({"step": step,
+                                             "actions": {str(seat): action.to_dict() for seat, action in selected.items()},
+                                             "observations_sha256": observation_hashes}) + "\n")
+                observations = env.step(selected)
+                step += 1
+                decisions += len(selected)
+            scores = list(env.scores())
+            stream.write(canonical_json({"type": "trace_end", "steps": step, "scores": scores}) + "\n")
+        events = list(env.mjai_log)
+        # Preserve the engine log verbatim, then normalize end-game scores from
+        # the terminal engine state. The raw file is never overwritten by conversion.
+        write_events(raw_path, events)
+        if not events or events[-1].get("type") != "end_game":
+            raise DataError("Engine did not emit end_game")
+        events[-1] = dict(events[-1], scores=scores)
+        write_events(mjai_path, events)
+        return {"steps": step, "decisions": decisions, "scores": scores}
 
 
 def verify_record(storage: Storage, record: dict, *, replay: bool = True) -> dict:
@@ -189,7 +189,8 @@ def collect_selfplay(storage: Storage, *, name: str, games: int, seed_start: int
     config = {"schema_version": 1, "source": "agarilab-selfplay", "games": games,
               "seed_start": seed_start, "agents": agents, "rules": asdict(Rules()),
               "code": source_fingerprint(),
-              "agent_provenance": [agent_provenance(name) for name in agents]}
+              "agent_provenance": [agent_provenance(name) for name in agents],
+              "engine": engine_identity()}
     catalog_path = meta_dir / "catalog.sqlite"
     run_path = meta_dir / "acquisition.json"
     added = reused = 0
@@ -218,6 +219,8 @@ def collect_selfplay(storage: Storage, *, name: str, games: int, seed_start: int
                     storage.check()
                     if source_fingerprint() != config["code"]:
                         raise DataError("Producer source changed during collection; use a new dataset version")
+                    if engine_identity() != config["engine"]:
+                        raise DataError("Engine binary changed during collection")
                     if [agent_provenance(name) for name in agents] != config["agent_provenance"]:
                         raise DataError("Agent configuration, weights or source changed during collection")
                     if metadata_path.exists():

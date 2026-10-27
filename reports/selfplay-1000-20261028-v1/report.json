@@ -1,0 +1,64 @@
+{
+  "dataset": "selfplay-v1",
+  "source": "agarilab-selfplay",
+  "status": "complete",
+  "dataset_sha256": "39194c82b1f3bb8bff219425dc0ffa06ed2f0468e94f4fbd13f73d158048e4d3",
+  "partitions": {
+    "test": 50,
+    "train": 900,
+    "validation": 50
+  },
+  "games": 1000,
+  "unique_ids": 1000,
+  "unique_canonical_hashes": 1000,
+  "steps": 621005,
+  "decisions": 629006,
+  "rounds": 9978,
+  "resume_check": {
+    "added": 0,
+    "reused": 1000
+  },
+  "config": {
+    "agent_provenance": [
+      {
+        "kind": "builtin",
+        "name": "efficiency"
+      },
+      {
+        "kind": "builtin",
+        "name": "efficiency"
+      },
+      {
+        "kind": "builtin",
+        "name": "efficiency"
+      },
+      {
+        "kind": "builtin",
+        "name": "efficiency"
+      }
+    ],
+    "agents": [
+      "efficiency",
+      "efficiency",
+      "efficiency",
+      "efficiency"
+    ],
+    "code": {
+      "package": "agari-kit",
+      "source_sha256": "7874ecf3844abc6432d15e80c244383f8635f2e046929da54207afc54932f9d6",
+      "version": "0.1.0"
+    },
+    "games": 1000,
+    "rules": {
+      "engine_version": "0.4.10",
+      "game_mode": "4p-red-half",
+      "preset": "tenhou"
+    },
+    "schema_version": 1,
+    "seed_start": 0,
+    "source": "agarilab-selfplay"
+  },
+  "catalog_sha256": "603f04bb351650496e78d13f0e8a72ca2d97abbc276f2364bcf85cfd508aeb65",
+  "parquet_sha256": "f4a45036055cbdb9a9f195ef459f7e3da9fa514ade06e9a43fdde9a129aed751",
+  "split_file_sha256": "192e3af58dbeffbbde677234e423aa2ac37c76f5bf9071a0670cd6a768f1aa5a"
+}

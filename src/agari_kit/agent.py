@@ -6,6 +6,7 @@ import json
 import base64
 import random
 import time
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Protocol
 
@@ -119,3 +120,32 @@ def make_agent(name: str) -> Agent:
         return factories[name]()
     except KeyError as exc:
         raise ValueError(f"Unknown agent: {name}") from exc
+
+
+@contextmanager
+def managed_agents(names: list[str]):
+    """Close optional agent resources on success, failure and partial loading."""
+    agents = []
+    active_error = None
+    try:
+        for name in names:
+            agents.append(make_agent(name))
+        yield agents
+    except BaseException as exc:
+        active_error = exc
+        raise
+    finally:
+        failures = []
+        for agent in reversed(agents):
+            close = getattr(agent, "close", None)
+            if callable(close):
+                try:
+                    close()
+                except Exception as exc:
+                    failures.append(type(exc).__name__)
+        if failures:
+            message = "Agent cleanup failed: " + ", ".join(failures)
+            if active_error is not None:
+                active_error.add_note(message)
+            else:
+                raise RuntimeError(message)

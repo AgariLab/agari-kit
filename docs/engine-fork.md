@@ -8,9 +8,21 @@ Apache-2.0 许可证和第三方来源说明。2026-10-28 已通过 GitHub API �
 [`479c1faeb33d082965eef8198f63261a79c0fce3`](https://github.com/smly/RiichiEnv/commit/479c1faeb33d082965eef8198f63261a79c0fce3)。
 已用 Git 校验 tag 和本地检出 commit 一致。
 
-本地 `agari/strict-tsumogiri` 分支修复 MJAI 显式 `tsumogiri` 标记与物理摸牌不一致时仍被宽松接受的问题。
-新增四人／三人、赤五／普通五、同种不同物理牌及鸣牌后强制手切回归；补丁在独立构建环境验证。
+已推送 [`agari/strict-tsumogiri`](https://github.com/AgariLab/RiichiEnv/tree/agari/strict-tsumogiri)，固定补丁提交
+[`4ff32a698ac1d0cd51342dd8a02c4202cbdb1105`](https://github.com/AgariLab/RiichiEnv/commit/4ff32a698ac1d0cd51342dd8a02c4202cbdb1105)，
+修复 MJAI 显式 `tsumogiri` 标记与物理摸牌不一致时仍被宽松接受的问题。
+新增四人／三人、赤五／普通五、同种不同物理牌及鸣牌后强制手切回归。
+独立构建环境已通过 246 项相关 Python 测试、72 个子用例、35 项相关 Rust 集成测试和 47 项 kit 兼容检查。
+kit 原 expected failure 在该测试进程中作为普通断言通过，未修改基线测试源码。
+该 wheel 另完成 250 种子 × 四座轮换的 1,000 半庄可靠性运行，700,448 次决策、零非法动作和未处理异常。
+运行前后原生二进制哈希一致且匹配 wheel 内成员；评测清单已关联 commit、wheel 和 native SHA。
 当前 kit/research 仍使用锁定的上游 0.4.10，分支存在不代表已经晋级运行依赖。
+
+本机构建使用 Rust 1.92.0、Python 3.12.16、maturin 1.15.0，macOS 27.0.1 arm64。
+`RUSTFLAGS='-C strip=none'` 用于规避该机器遇到的 [Rust/LLVM 动态库对齐问题](https://github.com/rust-lang/rust/issues/157750)。
+最终 wheel SHA-256 为 `a66bad0da0d57a900c6bbe062e25daef06f4896a11cd7cb1cbb10020e0502c6c`。
+构建命令、外置缓存和 wheel 路径见本地 `runs/riichienv-strict-tsumogiri-20261028/build-manifest.json`；
+wheel 只保存在外置存储，没有发布为新的 Python 包。远端 Observation 兼容与正式依赖晋级尚未完成。
 
 ## 维护方式
 

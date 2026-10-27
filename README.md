@@ -93,6 +93,8 @@ agari connect ranked --agent efficiency --token-file .riichi-token --games 100 -
 执行环境需安装 factory 所属 Python 包；模型文件位于描述文件目录内。
 这是显式加载本地代码的接口，应使用自己确认的 factory。运行清单绑定描述内容、实际权重哈希和
 factory 所属包源码。每局开始检查版本，防止同一实验混入不同模型；评测另记录候选模型的决策延迟。
+运行同时绑定实际引擎二进制 SHA-256，区分包版本号相同的上游与 fork 构建。
+可选 `Agent.close()` 用于释放外部资源；采集与评测在正常结束、异常和部分加载失败时都执行清理。
 
 ## 测试
 

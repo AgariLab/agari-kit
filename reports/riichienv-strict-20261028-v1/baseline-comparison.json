@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "baseline": "../reliability-20261028-v1",
+  "fork": ".",
+  "key_fields": [
+    "seed",
+    "rotation"
+  ],
+  "compared_fields": [
+    "scores",
+    "ranks",
+    "steps",
+    "decisions",
+    "event_counts"
+  ],
+  "baseline_games": 1000,
+  "fork_games": 1000,
+  "common_games": 1000,
+  "missing_from_fork": [],
+  "missing_from_baseline": [],
+  "mismatched_games": 0,
+  "mismatches_by_field": {
+    "scores": 0,
+    "ranks": 0,
+    "steps": 0,
+    "decisions": 0,
+    "event_counts": 0
+  },
+  "differences": [],
+  "all_compared_fields_equal": true,
+  "baseline_source_sha256": "3646bd3e2548a30bf1616a22d8d347c2f721165cc63a5f145450db450322240b",
+  "fork_source_sha256": "7874ecf3844abc6432d15e80c244383f8635f2e046929da54207afc54932f9d6",
+  "same_kit_source": false,
+  "input_sha256": {
+    "baseline_games": "bba1a26cd58dd28b63875f234ab7684922150cf5ad265c2e801a3bc44f1c3dd9",
+    "fork_games": "9f5518ea29ad00104edcc7d043afa5fd1c94802683905d50b83c9db82788a436",
+    "baseline_manifest": "a487b1563b68dd944bbf839bb2b868a831c0a18c5fea8256458c719d7b3b40e8",
+    "fork_manifest": "f62ee6ae8b45a4fdd87e1bf412273e1a0c95ce3b6def3f7863cae8769f84df5d"
+  },
+  "interpretation": "This is a comparison of the recorded outputs, not a same-source causal experiment. The agari-kit source fingerprints differ; timing fields are not compared."
+}

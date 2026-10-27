@@ -11,7 +11,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from .agent import Rules
-from .engine import require_engine
+from .engine import require_engine, engine_identity
 from .online import ENDPOINTS, OnlineSession, ProtocolError
 from .plugins import agent_provenance
 from .provenance import source_fingerprint
@@ -113,9 +113,11 @@ async def connect_games(*, mode: str, agent_name: str, token: str, games: int,
     logger.disabled = True
     logger.propagate = False
     provenance = agent_provenance(agent_name)
+    engine = engine_identity()
     output.mkdir(parents=True, exist_ok=False)
     manifest = {"schema_version": 1, "endpoint": ENDPOINTS[mode], "mode": mode,
                 "agent": agent_name, "agent_provenance": provenance, "code": source_fingerprint(),
+                "engine": engine,
                 "rules_expected": asdict(Rules(game_mode="4p-red-east" if mode == "validate" else "4p-red-half")),
                 "games_requested": games, "reserve_ms": reserve_ms, "status": "running"}
     manifest_path = output / "manifest.json"
@@ -124,7 +126,8 @@ async def connect_games(*, mode: str, agent_name: str, token: str, games: int,
     try:
         with (output / "events.jsonl").open("x") as events, (output / "games.jsonl").open("x") as results:
             for game_index in range(games):
-                if agent_provenance(agent_name) != provenance or source_fingerprint() != manifest["code"]:
+                if (agent_provenance(agent_name) != provenance or source_fingerprint() != manifest["code"]
+                        or engine_identity() != engine):
                     raise ConnectionFailure("Agent or toolkit changed during the run")
                 def emit(record):
                     events.write(json.dumps(dict(record, game_index=game_index)) + "\n")
@@ -137,7 +140,8 @@ async def connect_games(*, mode: str, agent_name: str, token: str, games: int,
                     # Load engine/model before entering matchmaking or starting
                     # any decision clock. No token is sent to the agent.
                     await runner.start()
-                    if agent_provenance(agent_name) != provenance or source_fingerprint() != manifest["code"]:
+                    if (agent_provenance(agent_name) != provenance or source_fingerprint() != manifest["code"]
+                            or engine_identity() != engine):
                         raise ConnectionFailure("Agent or toolkit changed while loading")
                     async with connect(ENDPOINTS[mode], additional_headers={"Authorization": f"Bearer {token}"},
                                        proxy=proxy, logger=logger, open_timeout=15,

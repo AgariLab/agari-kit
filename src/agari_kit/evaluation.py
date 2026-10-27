@@ -12,8 +12,8 @@ from collections import Counter
 from dataclasses import asdict
 from pathlib import Path
 
-from .agent import Context, Rules, ensure_legal, make_agent
-from .engine import new_environment
+from .agent import Context, Rules, ensure_legal, managed_agents
+from .engine import new_environment, engine_identity
 from .plugins import agent_provenance
 from .provenance import source_fingerprint
 
@@ -77,20 +77,22 @@ def evaluate(seeds: list[int], lineup: list[str], output: Path, *, max_steps: in
     fixtures = list(schedule(seeds, lineup))
     provenance = [agent_provenance(name) for name in lineup]
     code = source_fingerprint()
+    engine = engine_identity()
 
     def check_unchanged():
-        if source_fingerprint() != code or [agent_provenance(name) for name in lineup] != provenance:
+        if (source_fingerprint() != code or engine_identity() != engine
+                or [agent_provenance(name) for name in lineup] != provenance):
             raise ValueError("Evaluation agent artifacts or source changed during the run")
 
     # Resolve factories / engine before creating an experiment directory.
-    for name in lineup:
-        make_agent(name)
-    check_unchanged()
+    with managed_agents(lineup):
+        check_unchanged()
     from .engine import require_engine
     require_engine()
     output.mkdir(parents=True, exist_ok=False)
     manifest = {"schema_version": 1, "rules": asdict(Rules()), "lineup": lineup,
                 "lineup_provenance": provenance,
+                "engine": engine,
                 "seeds": seeds, "games_expected": len(fixtures), "status": "running",
                 "code": code, "python": sys.version}
     (output / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
@@ -101,50 +103,50 @@ def evaluate(seeds: list[int], lineup: list[str], output: Path, *, max_steps: in
             for seed, rotation, seats in fixtures:
                 check_unchanged()
                 env = new_environment(seed)
-                agents = [make_agent(name) for name in seats]
-                check_unchanged()
-                contexts = [Context(player_id=seat, seed=seed) for seat in range(4)]
-                for agent, context in zip(agents, contexts):
-                    agent.reset(context)
-                observations = env.reset()
-                latencies = []
-                candidate_game_latencies = []
-                started = time.monotonic()
-                steps = 0
-                while not env.done():
-                    if steps >= max_steps or not observations:
-                        raise RuntimeError("Engine stalled or exceeded step limit")
-                    actions = {}
-                    for seat, observation in observations.items():
-                        before = time.perf_counter()
-                        action = agents[seat].act(observation, contexts[seat])
-                        elapsed_ms = (time.perf_counter() - before) * 1000
-                        latencies.append(elapsed_ms)
-                        if seat == rotation:
-                            candidate_game_latencies.append(elapsed_ms)
-                        actions[seat] = ensure_legal(action, observation)
-                    observations = env.step(actions)
-                    steps += 1
-                game_elapsed = time.monotonic() - started
-                check_unchanged()
-                scores = list(env.scores())
-                if len(scores) != 4:
-                    raise RuntimeError("Unexpected final score shape")
-                # Tenhou ties favor the earlier initial seat.
-                order = sorted(range(4), key=lambda seat: (-scores[seat], seat))
-                ranks = [order.index(seat) + 1 for seat in range(4)]
-                latencies.sort()
-                row = {"seed": seed, "rotation": rotation, "seats": seats, "scores": scores,
-                       "ranks": ranks, "decisions": len(latencies), "steps": steps,
-                       "elapsed_seconds": game_elapsed,
-                       "latency_ms_p95": latencies[min(len(latencies)-1, int(len(latencies)*.95))],
-                       "latency_ms_max": max(latencies), "illegal_actions": 0,
-                       "event_counts": dict(Counter(event["type"] for event in env.mjai_log))}
-                row.update(_candidate_latency(candidate_game_latencies))
-                stream.write(json.dumps(row) + "\n")
-                stream.flush()
-                results.append(row)
-                candidate_latencies.extend(candidate_game_latencies)
+                with managed_agents(seats) as agents:
+                    check_unchanged()
+                    contexts = [Context(player_id=seat, seed=seed) for seat in range(4)]
+                    for agent, context in zip(agents, contexts):
+                        agent.reset(context)
+                    observations = env.reset()
+                    latencies = []
+                    candidate_game_latencies = []
+                    started = time.monotonic()
+                    steps = 0
+                    while not env.done():
+                        if steps >= max_steps or not observations:
+                            raise RuntimeError("Engine stalled or exceeded step limit")
+                        actions = {}
+                        for seat, observation in observations.items():
+                            before = time.perf_counter()
+                            action = agents[seat].act(observation, contexts[seat])
+                            elapsed_ms = (time.perf_counter() - before) * 1000
+                            latencies.append(elapsed_ms)
+                            if seat == rotation:
+                                candidate_game_latencies.append(elapsed_ms)
+                            actions[seat] = ensure_legal(action, observation)
+                        observations = env.step(actions)
+                        steps += 1
+                    game_elapsed = time.monotonic() - started
+                    check_unchanged()
+                    scores = list(env.scores())
+                    if len(scores) != 4:
+                        raise RuntimeError("Unexpected final score shape")
+                    # Tenhou ties favor the earlier initial seat.
+                    order = sorted(range(4), key=lambda seat: (-scores[seat], seat))
+                    ranks = [order.index(seat) + 1 for seat in range(4)]
+                    latencies.sort()
+                    row = {"seed": seed, "rotation": rotation, "seats": seats, "scores": scores,
+                           "ranks": ranks, "decisions": len(latencies), "steps": steps,
+                           "elapsed_seconds": game_elapsed,
+                           "latency_ms_p95": latencies[min(len(latencies)-1, int(len(latencies)*.95))],
+                           "latency_ms_max": max(latencies), "illegal_actions": 0,
+                           "event_counts": dict(Counter(event["type"] for event in env.mjai_log))}
+                    row.update(_candidate_latency(candidate_game_latencies))
+                    stream.write(json.dumps(row) + "\n")
+                    stream.flush()
+                    results.append(row)
+                    candidate_latencies.extend(candidate_game_latencies)
         report = summarize(results)
         report.update(_candidate_latency(candidate_latencies))
         report["latency_scope"] = "agent.act only; candidate seat isolated; excludes loading and transport"
