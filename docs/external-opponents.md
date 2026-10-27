@@ -15,6 +15,12 @@ Akochan 的参数可以直接从[固定版本 params 目录](https://github.com/
 
 Akochan 的 [LICENSE](https://github.com/critter-mj/akochan/blob/53188a0b926fbab38177f88c3cd87d554cf412af/LICENSE) 是自定义使用条款，覆盖仓库全部文件，因此也覆盖参数。它允许非公开研究和检讨使用；非营利公开输出需要注明使用 Akochan；部分再分发需要保留署名与条款，修改 `ai_src` 后的再分发原则上禁止，其他使用需作者许可。它不是 MIT、BSD 或 GPL 项目。适合本项目当前的方式是保存许可文本，在本地独立进程运行原版，不把 AI 源码或参数复制进 AgariLab 自有许可的发布包。若计划公开组织 fork、修改 AI 部分或商业使用，需先核实作者许可，而不能仅凭“GitHub 上可以下载”作结论。
 
+输出的使用条件与程序再分发条件应分别登记。第 1 条为非公开研究、分析提供一般使用依据；
+未专项解释离线训练或蒸馏，也没有明文禁止这些研究方法。第 3 条主张程序及分析结果的知识产权，
+但没有定义训练所得模型的范围，因此不能从一般研究条款或日志公开条件推出派生权重可任意公开或商用。
+当前 Akochan 对照实验仅用于独立评测，不进入训练／验证集；工程训练覆盖使用本项目基础 Agent 生成的数据。
+后续如用 Akochan 输出训练，应记录该一般研究依据及尚未明确的发布条件，不将输出或模型默认标为自有 Apache-2.0 数据。
+
 Mortal 的[代码许可](https://github.com/Equim-chan/Mortal/blob/0cff2b52982be5b1163aa9a62fb01f03ce91e0d2/README.md#license)为 AGPL-3.0-or-later。原作者 README 的权重入口仍链接到[作者说明](https://gist.github.com/Equim-chan/cf3f01735d5d98f1e7be02e94b288c56)：2022-08-19 的更新表示目前无发布训练模型的计划。该结论来自作者声明，并不等于互联网上不存在第三方自行训练的模型；第三方模型必须分别核实训练者、下载地址、SHA-256、架构版本和许可证。代码许可不能代替未发布权重的许可。其[源码归档](https://codeload.github.com/Equim-chan/Mortal/tar.gz/0cff2b52982be5b1163aa9a62fb01f03ce91e0d2)可取得，但不是可直接比赛的模型包。
 
 Akochan 的命令行入口如下；来自固定提交的 [main.cpp](https://github.com/critter-mj/akochan/blob/53188a0b926fbab38177f88c3cd87d554cf412af/main.cpp)。其中 `pipe` 已在本机实际执行，其余入口仅完成源码核查。
