@@ -53,6 +53,8 @@ agari connect ranked --agent efficiency --token-file .riichi-token --games 100 -
 报告包含平均顺位、名次率、得失点和按种子组 bootstrap 的 95% 区间；
 单种子不报告置信区间，达到样本量也不会自动宣称棋力提升。
 该可靠性报告的对手是随机与摸切智能体，不能用于证明强基线复现或世界级棋力。
+研究仓库导出的 PPO 模型也已完成 [1,000 半庄可靠性验收](reports/ppo-local-reliability-20261028-v1/README.md)，
+包含权重和源码绑定、独立候选延迟与逐场统计；该小模型同样尚未达到强基线棋力验收。
 
 `efficiency` 只用当前手牌和公开信息，先最小化向听数，再最大化有效进张，平手时保留赤五；
 接受和牌和立直，拒绝可选鸣牌。向听计算调用固定 RiichiEnv，不自行实现麻将规则。
@@ -116,3 +118,4 @@ python3 scripts/with_storage.py uv run --frozen python -m unittest discover -s t
 接口核对基于 [RiichiEnv v0.4.10 类型定义](https://github.com/smly/RiichiEnv/blob/v0.4.10/src/riichienv/_riichienv.pyi)。
 规则由 RiichiEnv 负责，不另行实现规则引擎。线上适配依据 [riichi.dev 协议](https://riichi.dev/docs/protocol)。
 组织引擎 fork 与版本晋级方式见 [引擎维护说明](docs/engine-fork.md)。
+外部对手可用权重、许可证和真实平台接口调研见 [外部对手与平台说明](docs/external-opponents.md)。
