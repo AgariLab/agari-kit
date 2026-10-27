@@ -65,7 +65,23 @@ agari connect ranked --agent efficiency --token-file .riichi-token --games 100 -
 使用独立进程控制推理时限；超时后终止进程、记录降级并让服务器默认出牌，避免丢失事件状态后继续假装正常推理。
 断线会终止本次运行，不将新的匹配算作旧局恢复。验证模式等待 `validation_result`；
 线上协议的原始事件不会重复交给 Agent，只有 Observation 中的事件供 Agent 消费。
-目前通过本地状态机与真实引擎测试，尚未持有 Token 连接 riichi.dev。
+2026-10-28 已使用研究仓库的固定 PPO 完成一次真实验证，120 次动作均 accepted，
+服务端返回 `passed=true`，用户确认 Bot active。完整证据见
+[平台验证报告](https://github.com/AgariLab/agari-research/tree/main/experiments/riichi-validation-20261028-v1)。
+active Bot 直接进入排位，不重复验证。
+
+长批次排位使用监督脚本，在每场结束后检查完整终局、动作回执、超时与降级，再决定是否续排：
+
+```sh
+python3 scripts/with_storage.py uv run --frozen python scripts/run_online_campaign.py \
+  --agent efficiency --token-file .riichi-token --games 100 \
+  --idle-timeout 1800 --run ranked-supervised-v1
+```
+
+研究模型须在含研究依赖的环境中运行同一脚本，并传入对应 `@agent.json`。
+请求数、发送数和 accepted 数必须相同且非零；错误回执、超时、降级或身份变化会停止后续匹配，
+同时保留停止场的结果。成绩不参与停止条件，既有目录不覆盖。summary 每场更新完成数、健康数、计数和处理延迟；
+脚本、模型、工具源码和引擎摘要逐场核验。同一 Bot 同时只能运行一个排位连接。
 
 ## 数据与模型版本
 
