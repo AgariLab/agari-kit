@@ -3,7 +3,9 @@
 本适配器运行社区发布者 `haor` 的 Mortal-S42；它不是 Equim-chan 官方发布的权重。
 权重许可为 Apache-2.0；随附的 Mortal runtime、加载及构建脚本为 AGPL-3.0-or-later。
 原创进程适配器不包含这些第三方源码或参数，运行包保存在配置的外置存储。
-来源：[模型](https://huggingface.co/haor/Mortal-S42)、[身份](https://huggingface.co/haor/Mortal-S42/blob/main/model-identity.json)、[许可分别说明](https://huggingface.co/haor/Mortal-S42/blob/main/NOTICE)。
+来源：[固定发布说明](https://huggingface.co/haor/Mortal-S42/blob/524981f21a929e3c3b269f65af79b84163bd02ca/README.md)、[身份](https://huggingface.co/haor/Mortal-S42/blob/524981f21a929e3c3b269f65af79b84163bd02ca/model-identity.json)、[许可分别说明](https://huggingface.co/haor/Mortal-S42/blob/524981f21a929e3c3b269f65af79b84163bd02ca/NOTICE)、[原版推理说明](https://huggingface.co/haor/Mortal-S42/blob/524981f21a929e3c3b269f65af79b84163bd02ca/INFERENCE.zh-CN.md)。
+
+已完成的固定版本构建、规则窗口及四座位验收见 [阶段二薄报告](../reports/phase2-mortal-s42-v1/README.md)。
 
 固定版本与运行接口：
 
@@ -28,7 +30,7 @@ env -u HF_TOKEN -u HF_USERNAME \
   https_proxy=http://127.0.0.1:10800 http_proxy=http://127.0.0.1:10800 \
   HF_ENDPOINT=https://huggingface.co \
   hfd.sh haor/Mortal-S42 --revision 524981f21a929e3c3b269f65af79b84163bd02ca \
-  --local-dir '/Volumes/新加卷/AgariLab/runs/phase2-mortal-s42-v1/source' --tool wget
+  --local-dir '/Volumes/新加卷/AgariLab/runs/phase2-mortal-s42-rebuild-v1/source' --tool wget
 ```
 
 本机的 `hfd.sh` 支持固定 revision 和外置路径，但进度统计使用 GNU `stat/find` 选项；
@@ -38,6 +40,17 @@ macOS 上进度曾持续显示 0%，实际 80 个文件仍成功下载。构建�
 创建外置隔离 venv，使用项目 Python 3.12.16、清华索引、外置 uv 缓存和 copy 模式。
 本机已实测 Torch 2.9.1、NumPy 2.4.1；不需要升级主研究环境，也不需要改 conda base。
 完整安装文件内容记录在 `environment-files.json`，不能只用包版本代表运行身份。
+以下命令在 `agari-kit` 目录执行，使用新的复建目录；包版本来自实际环境的
+[完整版本列表](../reports/phase2-mortal-s42-v1/requirements-cpu.txt)：
+
+```sh
+python3 scripts/with_storage.py uv venv --python ../agari-research/.venv/bin/python \
+  '/Volumes/新加卷/AgariLab/runs/phase2-mortal-s42-rebuild-v1/venv'
+env UV_DEFAULT_INDEX=https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple \
+  python3 scripts/with_storage.py uv pip install \
+  --python '/Volumes/新加卷/AgariLab/runs/phase2-mortal-s42-rebuild-v1/venv/bin/python' \
+  -r reports/phase2-mortal-s42-v1/requirements-cpu.txt
+```
 
 发布包原构建有两个需要记录的环境适配：`runtime/Cargo.toml` 引用未打包的
 `exe-wrapper`，从上述固定 Mortal 提交补齐两个文件并记录哈希；macOS 的 PyO3
@@ -47,7 +60,7 @@ extension-module 无法链接同包的命令行工具，所以只构建 `--lib`�
 ```sh
 env HTTPS_PROXY=http://127.0.0.1:10800 HTTP_PROXY=http://127.0.0.1:10800 \
   PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -B scripts/build_mortal_s42.py \
-  --bundle '/Volumes/新加卷/AgariLab/runs/phase2-mortal-s42-v1' \
+  --bundle '/Volumes/新加卷/AgariLab/runs/phase2-mortal-s42-rebuild-v1' \
   --cargo '/Volumes/新加卷/AgariLab/cache/riichienv-strict/rustup/toolchains/1.92.0-aarch64-apple-darwin/bin/cargo' \
   --complete-workspace
 ```
@@ -87,7 +100,9 @@ CI 不自动下载模型；设置 `AGARILAB_MORTAL_DESCRIPTOR` 后运行
 源码、引擎和规则；缺失窗口、错误座位覆盖、文件变化或源码漂移会拒绝发布资格报告。
 `checks[].evidence_path` 始终相对于配置存储根，`evidence_sha256` 是对应实际文件的哈希。
 
-2026-10-29 开发探针已完成五个真实半庄、七项真实规则窗口，以及作者的张量／八个 MJAI
-冒烟用例。首次半庄含加载和原生复放约 4.94 秒，教师动作 p95 约 9.36 ms；它们只是本机
-开发样本。正式协议资格在共同源码冻结后另存新报告，之后仍须通过独立棋力门槛；
-这些探针不证明该社区模型已胜过 Akochan，也不代替 1,000 场教师筛选或学生晋级评测。
+2026-10-29 已在冻结 kit `78719f35ea17d68e3a6fcfd04a2aa969a95142cc` 下完成正式协议资格：
+四个真实半庄、1,672 次总决策／427 次教师决策、零非法，全部通过原生轨迹重放；七项
+真实 S42 规则窗口全部通过。四场含构造、初始化、收尾及复放共 13.894 秒，各场动作
+p95 为 10.12–15.92 ms。这是本机单线程、一个 S42 对三个 efficiency 的小样本测量，
+不外推四教师采集或正式棋力评测吞吐。资格报告与复现命令见上述薄报告；
+它不证明该社区模型已胜过 Akochan，也不代替 1,000 场教师筛选或学生晋级评测。

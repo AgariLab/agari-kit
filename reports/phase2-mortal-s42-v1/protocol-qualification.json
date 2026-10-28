@@ -1,0 +1,158 @@
+{
+  "checks": [
+    {
+      "evidence_path": "runs/phase2-mortal-s42-probe-four-seats-frozen-20261029-v1/report.json",
+      "evidence_sha256": "ccf4a09f3c5dceee676cb72a8ee86b2c524f045bcfc0d60f4ce7baef79683b85",
+      "name": "four-seat-native-half-games",
+      "status": "passed"
+    },
+    {
+      "evidence_path": "runs/phase2-mortal-s42-v1/native-boundary-probe-frozen-v1.json",
+      "evidence_sha256": "4adb4ba4d8d3f68a170196cc42e6a3d2f629f3d9b0f139f8608fcdbd87174f35",
+      "name": "test_ankan_dora_rinshan",
+      "status": "passed"
+    },
+    {
+      "evidence_path": "runs/phase2-mortal-s42-v1/native-boundary-probe-frozen-v1.json",
+      "evidence_sha256": "4adb4ba4d8d3f68a170196cc42e6a3d2f629f3d9b0f139f8608fcdbd87174f35",
+      "name": "test_kakan_delayed_dora_chankan",
+      "status": "passed"
+    },
+    {
+      "evidence_path": "runs/phase2-mortal-s42-v1/native-boundary-probe-frozen-v1.json",
+      "evidence_sha256": "4adb4ba4d8d3f68a170196cc42e6a3d2f629f3d9b0f139f8608fcdbd87174f35",
+      "name": "test_kyushu_decision_and_new_hand",
+      "status": "passed"
+    },
+    {
+      "evidence_path": "runs/phase2-mortal-s42-v1/native-boundary-probe-frozen-v1.json",
+      "evidence_sha256": "4adb4ba4d8d3f68a170196cc42e6a3d2f629f3d9b0f139f8608fcdbd87174f35",
+      "name": "test_reach_followup_discard",
+      "status": "passed"
+    },
+    {
+      "evidence_path": "runs/phase2-mortal-s42-v1/native-boundary-probe-frozen-v1.json",
+      "evidence_sha256": "4adb4ba4d8d3f68a170196cc42e6a3d2f629f3d9b0f139f8608fcdbd87174f35",
+      "name": "test_red_five_chi_followup_discard",
+      "status": "passed"
+    },
+    {
+      "evidence_path": "runs/phase2-mortal-s42-v1/native-boundary-probe-frozen-v1.json",
+      "evidence_sha256": "4adb4ba4d8d3f68a170196cc42e6a3d2f629f3d9b0f139f8608fcdbd87174f35",
+      "name": "test_red_five_pon_followup_discard",
+      "status": "passed"
+    },
+    {
+      "evidence_path": "runs/phase2-mortal-s42-v1/native-boundary-probe-frozen-v1.json",
+      "evidence_sha256": "4adb4ba4d8d3f68a170196cc42e6a3d2f629f3d9b0f139f8608fcdbd87174f35",
+      "name": "test_two_ron_events_then_next_hand",
+      "status": "passed"
+    },
+    {
+      "evidence_path": "runs/phase2-mortal-s42-probe-four-seats-frozen-20261029-v1/game-000.mjai.jsonl.gz",
+      "evidence_sha256": "dd61951979635f5d8f1d7eb2ae16feb786f31fef2f4a4b3a564e6381a540b981",
+      "name": "seat-0-mjai.jsonl.gz",
+      "status": "passed"
+    },
+    {
+      "evidence_path": "runs/phase2-mortal-s42-probe-four-seats-frozen-20261029-v1/game-000.trace.jsonl.gz",
+      "evidence_sha256": "c3827abe3991b598dfb1fe1a0589c0a8b1bff49e3f9cfe77b9defc62cf49f648",
+      "name": "seat-0-trace.jsonl.gz",
+      "status": "passed"
+    },
+    {
+      "evidence_path": "runs/phase2-mortal-s42-probe-four-seats-frozen-20261029-v1/game-001.mjai.jsonl.gz",
+      "evidence_sha256": "8619989f162ffe90468892fb151f062e1585d64a5bf2862d0ebe2adb4ccc193f",
+      "name": "seat-1-mjai.jsonl.gz",
+      "status": "passed"
+    },
+    {
+      "evidence_path": "runs/phase2-mortal-s42-probe-four-seats-frozen-20261029-v1/game-001.trace.jsonl.gz",
+      "evidence_sha256": "4489ad84ff43f30831fa6364148efb86e53a8c1c3f8377a3999b84a508c30474",
+      "name": "seat-1-trace.jsonl.gz",
+      "status": "passed"
+    },
+    {
+      "evidence_path": "runs/phase2-mortal-s42-probe-four-seats-frozen-20261029-v1/game-002.mjai.jsonl.gz",
+      "evidence_sha256": "e5f276520493f8232d27d01582a60c3aa56d8d2d8b9288fcf0b3960ffa631831",
+      "name": "seat-2-mjai.jsonl.gz",
+      "status": "passed"
+    },
+    {
+      "evidence_path": "runs/phase2-mortal-s42-probe-four-seats-frozen-20261029-v1/game-002.trace.jsonl.gz",
+      "evidence_sha256": "b711d0e40bfaa5684e7402db6f5e3e0518075ae41b807964403bc2125997cb70",
+      "name": "seat-2-trace.jsonl.gz",
+      "status": "passed"
+    },
+    {
+      "evidence_path": "runs/phase2-mortal-s42-probe-four-seats-frozen-20261029-v1/game-003.mjai.jsonl.gz",
+      "evidence_sha256": "6649417b371f669d778e5cb1d61e3d600b94d6d54b431522378bce34b4585fa5",
+      "name": "seat-3-mjai.jsonl.gz",
+      "status": "passed"
+    },
+    {
+      "evidence_path": "runs/phase2-mortal-s42-probe-four-seats-frozen-20261029-v1/game-003.trace.jsonl.gz",
+      "evidence_sha256": "5d7c6dd84287ebd25d423988566ee99210b1762ceb098bedd360d0188ea1e735",
+      "name": "seat-3-trace.jsonl.gz",
+      "status": "passed"
+    }
+  ],
+  "engine": {
+    "binary_sha256": "169c8c2c53bdace01e4ca319f54050565fe728a5b1b2fc6b7f3046738887071d",
+    "version": "0.4.10"
+  },
+  "kind": "mortal-protocol-qualification-v1",
+  "limits": [
+    "Protocol and rule compatibility only; not a playing-strength qualification",
+    "Pinned Tenhou rules only; no model or runtime policy patch",
+    "Full dependency content checked at construction; dependency stats checked at game boundaries",
+    "Per-decision identity guard covers the published runtime bundle, not all dependency files"
+  ],
+  "rules": {
+    "engine_version": "0.4.10",
+    "game_mode": "4p-red-half",
+    "preset": "tenhou"
+  },
+  "schema_version": 1,
+  "status": "passed",
+  "teacher_provenance": {
+    "artifacts": {
+      "manifest_path": {
+        "declared_path": "runtime-manifest.json",
+        "declared_sha256": "c36af3540f1d55d8cc87a177a52fb7391c8635bfd38ee4e0543f3cb28e4ced50",
+        "path": "/Volumes/新加卷/AgariLab/runs/phase2-mortal-s42-v1/runtime-manifest.json",
+        "sha256": "c36af3540f1d55d8cc87a177a52fb7391c8635bfd38ee4e0543f3cb28e4ced50"
+      }
+    },
+    "descriptor": {
+      "artifacts": {
+        "manifest_path": {
+          "path": "runtime-manifest.json",
+          "sha256": "c36af3540f1d55d8cc87a177a52fb7391c8635bfd38ee4e0543f3cb28e4ced50"
+        }
+      },
+      "factory": "agari_kit.opponents.mortal:MortalAgent",
+      "kwargs": {
+        "startup_timeout_seconds": 60,
+        "threads": 1,
+        "timeout_seconds": 10
+      }
+    },
+    "descriptor_path": "/Volumes/新加卷/AgariLab/runs/phase2-mortal-s42-v1/agent.json",
+    "descriptor_sha256": "de676bf5b23cb79327564cb89f512179cdc4642eed2dd66e5afcbe1fd0f0f70e",
+    "factory": "agari_kit.opponents.mortal:MortalAgent",
+    "kind": "external",
+    "name": "@/Volumes/新加卷/AgariLab/runs/phase2-mortal-s42-v1/agent.json",
+    "source": {
+      "files": 23,
+      "module": "agari_kit.opponents.mortal",
+      "module_path": "/Users/zhou/MyCodes/AgariLab/phase2-runtime-20261029-v1/agari-kit/src/agari_kit/opponents/mortal.py",
+      "package": "agari_kit",
+      "roots": [
+        "/Users/zhou/MyCodes/AgariLab/phase2-runtime-20261029-v1/agari-kit/src/agari_kit"
+      ],
+      "source_sha256": "5a5e61056e56b01fe8446775541c58cb9cb06ddc4e70fd3f4e651ca5932faa10"
+    }
+  },
+  "teacher_provenance_sha256": "427e5cb6908c812c7d01b774eecf3ef1cf03c4e4ab19c10c7ff27b321f733876"
+}

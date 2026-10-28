@@ -1,0 +1,252 @@
+{
+  "artifacts": {
+    "build_manifest": {
+      "bytes": 908,
+      "path": "runs/phase2-mortal-s42-v1/build-manifest.json",
+      "sha256": "3b63337f33ddf50ebf2ac63ee2e9f205b8736d4073c7c5edb6747863eed728d1"
+    },
+    "descriptor": {
+      "bytes": 329,
+      "path": "runs/phase2-mortal-s42-v1/agent.json",
+      "sha256": "de676bf5b23cb79327564cb89f512179cdc4642eed2dd66e5afcbe1fd0f0f70e"
+    },
+    "environment_inventory": {
+      "bytes": 2470985,
+      "path": "runs/phase2-mortal-s42-v1/environment-files.json",
+      "sha256": "4151473cc413be25b3baf8fa4805351e892cc37f5e94e17f744c9227c5342782"
+    },
+    "four_seat_probe": {
+      "bytes": 16783,
+      "path": "runs/phase2-mortal-s42-probe-four-seats-frozen-20261029-v1/report.json",
+      "sha256": "ccf4a09f3c5dceee676cb72a8ee86b2c524f045bcfc0d60f4ce7baef79683b85"
+    },
+    "native_boundaries": {
+      "bytes": 6816,
+      "path": "runs/phase2-mortal-s42-v1/native-boundary-probe-frozen-v1.json",
+      "sha256": "4adb4ba4d8d3f68a170196cc42e6a3d2f629f3d9b0f139f8608fcdbd87174f35"
+    },
+    "protocol_qualification": {
+      "bytes": 6798,
+      "path": "runs/phase2-mortal-s42-protocol-qualification-v1/report.json",
+      "sha256": "a8e1256a0ce4110a0226f0f899fe8134c0cf0ecc5b45eeed7b1f1cca1c30504c"
+    },
+    "runtime_manifest": {
+      "bytes": 10607,
+      "path": "runs/phase2-mortal-s42-v1/runtime-manifest.json",
+      "sha256": "c36af3540f1d55d8cc87a177a52fb7391c8635bfd38ee4e0543f3cb28e4ced50"
+    },
+    "source_completion": {
+      "bytes": 867,
+      "path": "runs/phase2-mortal-s42-v1/source-completion.json",
+      "sha256": "581058ce9b8f55602293705a8509224a3c77d25785505dd8dc0c34649576620e"
+    }
+  },
+  "build": {
+    "cargo": "cargo 1.92.0 (344c4567c 2025-10-21)",
+    "cargo_home": "/Volumes/新加卷/AgariLab/cache/phase2-mortal-s42/cargo",
+    "cargo_target": "/Volumes/新加卷/AgariLab/cache/phase2-mortal-s42/target",
+    "command": [
+      "/Volumes/新加卷/AgariLab/cache/riichienv-strict/rustup/toolchains/1.92.0-aarch64-apple-darwin/bin/cargo",
+      "build",
+      "--release",
+      "--locked",
+      "--lib",
+      "-p",
+      "libriichi"
+    ],
+    "elapsed_seconds": 14.438681166036986,
+    "log_path": "/Volumes/新加卷/AgariLab/runs/phase2-mortal-s42-v1/build-20261029T003641.log",
+    "log_sha256": "b5dc790bdbd9e33779405ba89fad5931f33eb8dc0f8286d7ff529a71a618d320",
+    "packages": {
+      "numpy": "2.4.1",
+      "python": "3.12.16 (main, Oct 26 2026, 13:59:40) [Clang 23.1.3 ]",
+      "suffix": ".cpython-312-darwin.so",
+      "torch": "2.9.1"
+    },
+    "platform": "macOS-27.0.1-arm64-arm-64bit"
+  },
+  "checks": {
+    "four_seat_games_engine_verified": 4,
+    "native_rule_preset_tests": 2,
+    "qualification_evidence_entries": 16,
+    "real_model_boundary_tests": 7,
+    "unit_tests": 22
+  },
+  "engine": {
+    "binary_sha256": "169c8c2c53bdace01e4ca319f54050565fe728a5b1b2fc6b7f3046738887071d",
+    "version": "0.4.10"
+  },
+  "frozen_kit_commit": "78719f35ea17d68e3a6fcfd04a2aa969a95142cc",
+  "frozen_kit_source_sha256": "c3a791b966a688a211bbb7bf1b87dcb908a80b474b75105ae90052d2d9a5cfb7",
+  "licenses": {
+    "bundled_runtime_and_release_loader": "AGPL-3.0-or-later",
+    "model_weights": "Apache-2.0",
+    "original_agari_adapter": "Apache-2.0"
+  },
+  "limits": [
+    "Protocol and rule compatibility only; not a playing-strength qualification",
+    "Pinned Tenhou rules only; no model or runtime policy patch",
+    "Full dependency content checked at construction; dependency stats checked at game boundaries",
+    "Per-decision identity guard covers the published runtime bundle, not all dependency files"
+  ],
+  "model": {
+    "action_space": 46,
+    "bytes": 43670035,
+    "checkpoint_name": "S42.8k",
+    "file": "weights/s42-inference.pth",
+    "format": "pytorch-state-dicts",
+    "inference_parameters": 10835631,
+    "is_oracle": false,
+    "name": "Mortal-S42",
+    "observation_shape": [
+      1012,
+      34
+    ],
+    "observation_version": 4,
+    "phase_steps": 42800,
+    "resnet": {
+      "conv_channels": 192,
+      "num_blocks": 40
+    },
+    "sha256": "e5f6955b6f19007fd65315e53291b36994493046bc118b991b959e9dc596d660",
+    "source_checkpoint_sha256": "b1acaf81cadf980525d6a5fa0231f9100545373eeeb6cb5e5f8e72936d5fb116",
+    "tensor_entries_including_buffers": 652,
+    "tensor_equality_to_source": true,
+    "weight_license": "apache-2.0"
+  },
+  "native_cases": {
+    "test_ankan_dora_rinshan": true,
+    "test_kakan_delayed_dora_chankan": true,
+    "test_kyushu_decision_and_new_hand": true,
+    "test_reach_followup_discard": true,
+    "test_red_five_chi_followup_discard": true,
+    "test_red_five_pon_followup_discard": true,
+    "test_two_ron_events_then_next_hand": true
+  },
+  "performance": {
+    "candidate_decisions": 427,
+    "decisions": 1672,
+    "games": [
+      {
+        "candidate_decisions": 110,
+        "candidate_latency_ms_max": 25.292124948464334,
+        "candidate_latency_ms_mean": 7.083388172428716,
+        "candidate_latency_ms_p95": 10.365542024374008,
+        "construction_seconds": 1.5149229579837993,
+        "decisions": 420,
+        "game_seconds": 0.8342974160332233,
+        "reset_seconds": 1.076251333928667,
+        "seat": 0,
+        "seed": 20261030,
+        "total_seconds_with_cleanup": 3.523637874983251
+      },
+      {
+        "candidate_decisions": 88,
+        "candidate_latency_ms_max": 17.366208019666374,
+        "candidate_latency_ms_mean": 7.186991986765696,
+        "candidate_latency_ms_p95": 12.325749965384603,
+        "construction_seconds": 1.464836208964698,
+        "decisions": 365,
+        "game_seconds": 0.6813760000513867,
+        "reset_seconds": 1.074383290950209,
+        "seat": 1,
+        "seed": 20261031,
+        "total_seconds_with_cleanup": 3.312216333928518
+      },
+      {
+        "candidate_decisions": 177,
+        "candidate_latency_ms_max": 17.79487496241927,
+        "candidate_latency_ms_mean": 6.950256114794036,
+        "candidate_latency_ms_p95": 10.121040977537632,
+        "construction_seconds": 1.4743149999994785,
+        "decisions": 671,
+        "game_seconds": 1.3146281250519678,
+        "reset_seconds": 1.0684212079504505,
+        "seat": 2,
+        "seed": 20261032,
+        "total_seconds_with_cleanup": 3.97929283301346
+      },
+      {
+        "candidate_decisions": 52,
+        "candidate_latency_ms_max": 17.370874993503094,
+        "candidate_latency_ms_mean": 7.725806168029801,
+        "candidate_latency_ms_p95": 15.924165956676006,
+        "construction_seconds": 1.4781210829969496,
+        "decisions": 216,
+        "game_seconds": 0.4322757920017466,
+        "reset_seconds": 1.0750145829515532,
+        "seat": 3,
+        "seed": 20261033,
+        "total_seconds_with_cleanup": 3.0685169579228386
+      }
+    ],
+    "illegal_actions": 0,
+    "limits": "Four distinct engineering seeds, one S42 versus three efficiency agents; per-game p95 range is not a pooled p95; excludes network",
+    "ranges": {
+      "candidate_latency_ms_max": {
+        "max": 25.292124948464334,
+        "min": 17.366208019666374
+      },
+      "candidate_latency_ms_mean": {
+        "max": 7.725806168029801,
+        "min": 6.950256114794036
+      },
+      "candidate_latency_ms_p95": {
+        "max": 15.924165956676006,
+        "min": 10.121040977537632
+      },
+      "construction_seconds": {
+        "max": 1.5149229579837993,
+        "min": 1.464836208964698
+      },
+      "game_seconds": {
+        "max": 1.3146281250519678,
+        "min": 0.4322757920017466
+      },
+      "reset_seconds": {
+        "max": 1.076251333928667,
+        "min": 1.0684212079504505
+      },
+      "total_seconds_with_cleanup": {
+        "max": 3.97929283301346,
+        "min": 3.0685169579228386
+      }
+    },
+    "total_wall_seconds": 13.893623833078891
+  },
+  "rules": {
+    "engine_version": "0.4.10",
+    "game_mode": "4p-red-half",
+    "preset": "tenhou"
+  },
+  "runtime_inventory_files": 15793,
+  "schema_version": 1,
+  "scope": "CPU protocol/rule qualification; no playing-strength claim",
+  "source": {
+    "mortal_commit": "0cff2b52982be5b1163aa9a62fb01f03ce91e0d2",
+    "repo": "haor/Mortal-S42",
+    "revision": "524981f21a929e3c3b269f65af79b84163bd02ca",
+    "runtime_license": "AGPL-3.0-or-later",
+    "weight_license": "Apache-2.0"
+  },
+  "source_completion": {
+    "files": {
+      "source/runtime/exe-wrapper/Cargo.toml": {
+        "bytes": 107,
+        "git_blob": "7117575e0b5247c677f6689fc087d38a7fe55321",
+        "sha256": "7daa556ce47c8c30f7c931694f17eafe4474a38375b6d305551c63be43da7663",
+        "url": "https://raw.githubusercontent.com/Equim-chan/Mortal/0cff2b52982be5b1163aa9a62fb01f03ce91e0d2/exe-wrapper/Cargo.toml"
+      },
+      "source/runtime/exe-wrapper/src/main.rs": {
+        "bytes": 2206,
+        "git_blob": "4662c16db669ad381ae8ff2e396525b2880b72cd",
+        "sha256": "338b3b77f6caa451053e21cddab3607acc7844f81c94277cd32f19e8d42dde7f",
+        "url": "https://raw.githubusercontent.com/Equim-chan/Mortal/0cff2b52982be5b1163aa9a62fb01f03ce91e0d2/exe-wrapper/src/main.rs"
+      }
+    },
+    "reason": "Published S42 workspace names exe-wrapper but omits its files",
+    "upstream_commit": "0cff2b52982be5b1163aa9a62fb01f03ce91e0d2"
+  },
+  "status": "passed",
+  "teacher_provenance_sha256": "427e5cb6908c812c7d01b774eecf3ef1cf03c4e4ab19c10c7ff27b321f733876"
+}
