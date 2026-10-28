@@ -100,3 +100,8 @@ PYTHONPATH=src .venv/bin/python -m unittest discover -s tests/browser -v
 `source_sha256` 是 MJAI 规范化事件流摘要，不是压缩文件字节摘要。`display_events_sha256`
 对应各视角实际导出事件，投影及补齐显示分数使其可以与源摘要不同。本文没有把临时
 产物位置或截图视为独立的规则验证收据。
+
+## 后续分数来源补项
+
+新版 `56efbcf` 将原始投影事件和推算显示分开，并明确标注跨局分数冲突。
+独立的[分数边界验收](score-boundary-v2/README.md)保留新增截图、机器记录及测试范围；上文旧版证据保持原样。

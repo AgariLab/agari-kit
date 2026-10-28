@@ -1,0 +1,71 @@
+{
+  "source_partition": "train",
+  "game_id": "selfplay:115de6400e6e1351368e35f38b8ea912244a1193dcc296cf9d843ef87fd12cea",
+  "train_manifest_sha256": "ad3d2f790454a315a01244d7989b102de6d453e9bc42119507e8de02a2b944fa",
+  "source_sha256": "115de6400e6e1351368e35f38b8ea912244a1193dcc296cf9d843ef87fd12cea",
+  "views": [
+    {
+      "schema_version": 2,
+      "artifact": "offline-mjai-replay",
+      "validation": "structural-only",
+      "source_sha256": "115de6400e6e1351368e35f38b8ea912244a1193dcc296cf9d843ef87fd12cea",
+      "events": 1231,
+      "rounds": 10,
+      "final_scores": [
+        35300,
+        -700,
+        52600,
+        12800
+      ],
+      "view": "full-information-research",
+      "player": null,
+      "viewer": "riichienv==0.4.10",
+      "viewer_gzip_sha256": "dd0a3d471b36cc6ef24e96628d677de51d91a6f6d234a3b8a24abd59b6979f80",
+      "projected_events_sha256": "eefcadd1f7b72eaca0f05bc654c3ad80213864d7ef53802ea5d9fdd09bf4b94d",
+      "display_events_sha256": "e4c124af7191813a364c2dab9f781c833d396ff7cce91dfbc817870e65e61862",
+      "score_policy": "recorded-at-event-otherwise-derived",
+      "score_conflicts": 0,
+      "output": "/Volumes/新加卷/AgariLab/runs/offline-replay-v1/score-boundary-v2/full.html",
+      "bytes": 433711,
+      "last_settlement_scores": [
+        35300,
+        -700,
+        50600,
+        12800
+      ],
+      "browser_checks": "render, steps, rewind, rounds, settlements, terminal pool award, offline"
+    },
+    {
+      "schema_version": 2,
+      "artifact": "offline-mjai-replay",
+      "validation": "structural-only",
+      "source_sha256": "115de6400e6e1351368e35f38b8ea912244a1193dcc296cf9d843ef87fd12cea",
+      "events": 1231,
+      "rounds": 10,
+      "final_scores": [
+        35300,
+        -700,
+        52600,
+        12800
+      ],
+      "view": "player-0-visible",
+      "player": 0,
+      "viewer": "riichienv==0.4.10",
+      "viewer_gzip_sha256": "dd0a3d471b36cc6ef24e96628d677de51d91a6f6d234a3b8a24abd59b6979f80",
+      "projected_events_sha256": "2faec817ba26342cf0980da8d2288c27a44efb818d1454801b526e820ca0c250",
+      "display_events_sha256": "989f769f2bd2069b7bf8ded6863df88057461c65b3813d272916d9cbacea6115",
+      "score_policy": "recorded-at-event-otherwise-derived",
+      "score_conflicts": 0,
+      "output": "/Volumes/新加卷/AgariLab/runs/offline-replay-v1/score-boundary-v2/player-0.html",
+      "bytes": 432823,
+      "last_settlement_scores": [
+        35300,
+        -700,
+        50600,
+        12800
+      ],
+      "browser_checks": "render, steps, rewind, rounds, settlements, terminal pool award, offline"
+    }
+  ],
+  "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36"
+}

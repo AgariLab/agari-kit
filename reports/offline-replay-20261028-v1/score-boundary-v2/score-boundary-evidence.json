@@ -1,0 +1,45 @@
+{
+  "fixture_kind": "display-only, upstream issue 247 score pattern",
+  "browser": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+  "views": [
+    {
+      "player": null,
+      "settlement_scores": [
+        30600,
+        23500,
+        15400,
+        24500
+      ],
+      "settlement_notice": "桌面分数为按日志立直扣点与 deltas 累计的推算值，尚未核实；原始日志可能存在重复扣点或缺失。 离线对照发现此结算与紧随下一局的起始 scores 不一致；当前数字有冲突，未用未来分数回填。",
+      "source_event": {
+        "type": "ryukyoku",
+        "deltas": [
+          -1000,
+          0,
+          -1000,
+          -1000
+        ]
+      }
+    },
+    {
+      "player": 0,
+      "settlement_scores": [
+        30600,
+        23500,
+        15400,
+        24500
+      ],
+      "settlement_notice": "桌面分数为按日志立直扣点与 deltas 累计的推算值，尚未核实；原始日志可能存在重复扣点或缺失。 离线对照发现此结算与紧随下一局的起始 scores 不一致；当前数字有冲突，未用未来分数回填。",
+      "source_event": {
+        "type": "ryukyoku",
+        "deltas": [
+          -1000,
+          0,
+          -1000,
+          -1000
+        ]
+      }
+    }
+  ],
+  "checks": "source preservation, conflict notice, causal scores, rewind, terminal priority, offline"
+}
