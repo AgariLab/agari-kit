@@ -11,6 +11,41 @@ from agari_kit.storage import Storage
 
 
 class CollectionTests(unittest.TestCase):
+    def test_wall_budget_pauses_after_verified_game_and_resumes_without_duplicates(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            storage = Storage(Path(tmp))
+            args = dict(name="budget", games=2, seed_start=100, agents=["efficiency"] * 4)
+            # Start, first game allowed, next game disallowed, final timing.
+            with patch("agari_kit.collection.time.monotonic", side_effect=[0, 0, 11, 11]):
+                first = collect_selfplay(storage, **args, max_wall_seconds=10)
+            self.assertEqual((first["status"], first["added"]), ("paused", 1))
+            state_path = storage.path("datasets/manifests/budget/acquisition.json")
+            state = json.loads(state_path.read_text())
+            self.assertNotIn("completed_at", state)
+            self.assertNotIn("max_wall_seconds", state["config"])
+            with Catalog(Path(first["catalog"])) as catalog:
+                saved = catalog.games()[0]
+            second = collect_selfplay(storage, **args, max_wall_seconds=60)
+            self.assertEqual((second["status"], second["added"], second["reused"]), ("complete", 1, 1))
+            with Catalog(Path(second["catalog"])) as catalog:
+                records = catalog.games()
+                self.assertEqual(len(records), 2)
+                self.assertIn(saved, records)
+            verify_record(storage, saved)
+
+    def test_budget_before_first_game_and_invalid_values(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            storage = Storage(Path(tmp))
+            args = dict(name="empty-budget", games=1, seed_start=100, agents=["efficiency"] * 4)
+            for invalid in (0, -1, float("nan"), float("inf"), True):
+                with self.assertRaisesRegex(DataError, "finite and positive"):
+                    collect_selfplay(storage, **args, max_wall_seconds=invalid)
+            self.assertFalse(storage.path("datasets/manifests/empty-budget").exists())
+            with patch("agari_kit.collection.time.monotonic", side_effect=[0, 11, 11]):
+                paused = collect_selfplay(storage, **args, max_wall_seconds=10)
+            self.assertEqual((paused["status"], paused["added"]), ("paused", 0))
+            self.assertEqual(collect_selfplay(storage, **args)["status"], "complete")
+
     def test_raw_preservation_resume_and_tamper_detection(self):
         with tempfile.TemporaryDirectory() as tmp:
             storage = Storage(Path(tmp))
