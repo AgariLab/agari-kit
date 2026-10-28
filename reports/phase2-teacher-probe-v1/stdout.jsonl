@@ -1,0 +1,19 @@
+{"verified_game": 1, "seed": 2620000, "elapsed_seconds": 17.007683458039537}
+{"verified_game": 2, "seed": 2620001, "elapsed_seconds": 32.57053133298177}
+{"verified_game": 3, "seed": 2620002, "elapsed_seconds": 47.460924666957}
+{"verified_game": 4, "seed": 2620003, "elapsed_seconds": 67.01711654197425}
+{"verified_game": 5, "seed": 2620004, "elapsed_seconds": 84.63202487502713}
+{"verified_game": 6, "seed": 2620005, "elapsed_seconds": 102.1825787499547}
+{"verified_game": 7, "seed": 2620006, "elapsed_seconds": 118.74344837502576}
+{"verified_game": 8, "seed": 2620007, "elapsed_seconds": 135.27025687496644}
+{"verified_game": 9, "seed": 2620008, "elapsed_seconds": 153.09486845799256}
+{"verified_game": 10, "seed": 2620009, "elapsed_seconds": 170.5200876670424}
+{"dataset": "phase2-teacher-probe-v1", "completed": 10, "games": 16}
+{"verified_game": 11, "seed": 2620010, "elapsed_seconds": 188.84083304204978}
+{"verified_game": 12, "seed": 2620011, "elapsed_seconds": 206.89909658301622}
+{"verified_game": 13, "seed": 2620012, "elapsed_seconds": 224.57661500002723}
+{"verified_game": 14, "seed": 2620013, "elapsed_seconds": 240.51929683296476}
+{"verified_game": 15, "seed": 2620014, "elapsed_seconds": 256.12153645802755}
+{"verified_game": 16, "seed": 2620015, "elapsed_seconds": 273.6150766250212}
+{"dataset": "phase2-teacher-probe-v1", "completed": 16, "games": 16}
+{"status": "passed", "profile": "/Volumes/\u65b0\u52a0\u5377/AgariLab/runs/phase2-teacher-probe-v1/cost-profile.json", "collect_wall_seconds": 274.87347858410794, "sha256": "20b7ee39277665ef5c1539c5f425e1176885b2b5eca434aba92a6743f2dcf722"}

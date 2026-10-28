@@ -1,0 +1,1222 @@
+{
+  "action_latency_ms": {
+    "max": 42.78541693929583,
+    "mean": 8.0798670246097,
+    "p95": 12.963499990291893
+  },
+  "artifacts": {
+    "acquisition": {
+      "bytes": 6111,
+      "path": "datasets/manifests/phase2-teacher-probe-v1/acquisition.json",
+      "sha256": "cd7c4b59a0528d7fb0cb4aa8e80f834c58d84567d143a5e8d4426b1e7998842a"
+    },
+    "catalog": {
+      "bytes": 28672,
+      "path": "datasets/manifests/phase2-teacher-probe-v1/catalog.sqlite",
+      "sha256": "192a39895a10a98532fd11fed70ebde257b0d205298196b1302aa53a9742dea8"
+    },
+    "metadata": {
+      "bytes": 10127,
+      "path": "datasets/manifests/phase2-teacher-probe-v1/metadata.parquet",
+      "sha256": "12454fe15a0c2c7517fd60736dcaff8bd6f6a6685b67e3649d4c30ce1a15bae5"
+    },
+    "observer": {
+      "bytes": 7142,
+      "path": "runs/phase2-teacher-probe-v1/observer.py",
+      "sha256": "306befa765eef2527acf7530977fff5531c8e33bd744babd8eef770152dc1360"
+    },
+    "profile": {
+      "bytes": 554298,
+      "path": "runs/phase2-teacher-probe-v1/cost-profile.json",
+      "sha256": "20b7ee39277665ef5c1539c5f425e1176885b2b5eca434aba92a6743f2dcf722"
+    },
+    "receipt_verifier": {
+      "bytes": 8662,
+      "path": "runs/phase2-teacher-probe-v1/verify_receipts.py",
+      "sha256": "6e106a9ad1d9375454a6b5999c0dac665db32f23a56b9d1774fbd71d9238e66d"
+    },
+    "stdout": {
+      "bytes": 1609,
+      "path": "runs/phase2-teacher-probe-v1/stdout.jsonl",
+      "sha256": "fb8c7c61899e6117bf38c3df3776e63ebbc2665e9c27088fc78e9ed7bcda6629"
+    },
+    "time_and_stderr": {
+      "bytes": 777,
+      "path": "runs/phase2-teacher-probe-v1/time-and-stderr.log",
+      "sha256": "7cf9261086c47e33092a850beba5a61fa75bec67efea216f9612911381e2f9d3"
+    }
+  },
+  "code": {
+    "package": "agari-kit",
+    "source_sha256": "c3a791b966a688a211bbb7bf1b87dcb908a80b474b75105ae90052d2d9a5cfb7",
+    "version": "0.1.0"
+  },
+  "concurrent_load": "Parent is running the registered S42 qualification evaluation concurrently; not an idle-machine benchmark",
+  "decisions": 11071,
+  "engine": {
+    "binary_sha256": "169c8c2c53bdace01e4ca319f54050565fe728a5b1b2fc6b7f3046738887071d",
+    "version": "0.4.10"
+  },
+  "estimates": {
+    "1000": {
+      "games": 1000,
+      "hours_linear_mean": 4.774305555555555,
+      "nominal_exceeds_48_hours": false,
+      "observed_per_game_range_extrapolated_hours": [
+        4.161547997474473,
+        5.460195185254027
+      ],
+      "range_is_confidence_interval": false,
+      "seconds_linear_mean": 17187.5
+    },
+    "10000": {
+      "games": 10000,
+      "hours_linear_mean": 47.74305555555556,
+      "nominal_exceeds_48_hours": false,
+      "observed_per_game_range_extrapolated_hours": [
+        41.61547997474473,
+        54.601951852540275
+      ],
+      "range_is_confidence_interval": false,
+      "seconds_linear_mean": 171875.0
+    }
+  },
+  "estimation_limits": [
+    "Linear estimates from 16 games under concurrent qualification load, not guarantees",
+    "Observed single-game minimum/maximum extrapolation is not a confidence interval",
+    "Same per-game reconstruction, CPU settings, engine validation and storage required",
+    "No optimization, pilot collection, training split, or larger self-play run performed"
+  ],
+  "four_seat_trace_and_receipt_identity_matches": 16,
+  "games": [
+    {
+      "decisions": 647,
+      "game_and_validation_seconds": 16.849412751034833,
+      "index": 0,
+      "mjai": {
+        "bytes": 3934,
+        "path": "datasets/mjai/phase2-teacher-probe-v1/game-000000.jsonl.gz",
+        "sha256": "21e7df9f95ba51520ac2068006aecfd73813b3d466ccd99736c78cd42320ead3"
+      },
+      "raw": {
+        "bytes": 3919,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000000.jsonl.gz",
+        "sha256": "8d154be73e5082c2c86a59d223668032d25c5f197bab427451f89fa58edf0a25"
+      },
+      "receipt": {
+        "bytes": 1349,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000000.verification.json",
+        "sha256": "1f472f35b75bc064b3a7f419561bcefd55a73d6d507e919673d50d6a21b5301c"
+      },
+      "record": {
+        "bytes": 725,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000000.json",
+        "sha256": "ea16e5acbfe2ea2191dd80f28557f62f7ef4e56fd87e6bc23f8015d82eaab86c"
+      },
+      "rounds": 10,
+      "seed": 2620000,
+      "timings": {
+        "act": {
+          "calls": 647,
+          "failed_calls": 0,
+          "seconds": 5.2988662966527045
+        },
+        "close": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 0.24422795814462006
+        },
+        "construction": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 6.473558043129742
+        },
+        "native_validation": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 0.04174183402210474
+        },
+        "record_game": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 16.80767091701273
+        },
+        "reset": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 4.727956625050865
+        }
+      },
+      "trace": {
+        "bytes": 31413,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000000.trace.jsonl.gz",
+        "sha256": "3809b1adff32b9b0dfb9a3b4697dfe0aedf1ad4f09e68516c66f97b7aea37e82"
+      }
+    },
+    {
+      "decisions": 513,
+      "game_and_validation_seconds": 15.530889291898347,
+      "index": 1,
+      "mjai": {
+        "bytes": 3344,
+        "path": "datasets/mjai/phase2-teacher-probe-v1/game-000001.jsonl.gz",
+        "sha256": "4dbdff6bbe6ec364e070909865675cd9e3804d8b9e7b8c146afba77ddfe59083"
+      },
+      "raw": {
+        "bytes": 3326,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000001.jsonl.gz",
+        "sha256": "251c5c542dcc65aedf3f648e4a2a664cbcdb5b4c5cf8c22611ce357be7bbe2f7"
+      },
+      "receipt": {
+        "bytes": 1347,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000001.verification.json",
+        "sha256": "fc4a7f4f56e9d4c56e7511895eb2fd40767718ef672462186bc4728a1fb00adc"
+      },
+      "record": {
+        "bytes": 725,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000001.json",
+        "sha256": "a3463b060b93282a5187d05032e5817fe9bca6c59e4a483605b35ef1158c7d37"
+      },
+      "rounds": 9,
+      "seed": 2620001,
+      "timings": {
+        "act": {
+          "calls": 513,
+          "failed_calls": 0,
+          "seconds": 4.337681317119859
+        },
+        "close": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 0.2404684170614928
+        },
+        "construction": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 6.2944826249731705
+        },
+        "native_validation": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 0.031947874929755926
+        },
+        "record_game": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 15.498941416968592
+        },
+        "reset": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 4.572816999047063
+        }
+      },
+      "trace": {
+        "bytes": 25139,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000001.trace.jsonl.gz",
+        "sha256": "a3f81ea48c3ecfede96c8589477d41c0cd24e20d51dfbca9a56be94c0234db3c"
+      }
+    },
+    {
+      "decisions": 423,
+      "game_and_validation_seconds": 14.859690041048452,
+      "index": 2,
+      "mjai": {
+        "bytes": 2768,
+        "path": "datasets/mjai/phase2-teacher-probe-v1/game-000002.jsonl.gz",
+        "sha256": "164e3fcc5006c53d94195343001c47736e87337d90f1167d723beb22cee5153f"
+      },
+      "raw": {
+        "bytes": 2758,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000002.jsonl.gz",
+        "sha256": "e6915f5d4b959a32627872c5d611921b30474f6a5510269823f14027d78c0b86"
+      },
+      "receipt": {
+        "bytes": 1346,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000002.verification.json",
+        "sha256": "f060ad793e637f1be4f9da0fc7ce508d9d0a0952323e067c42c945a36be88951"
+      },
+      "record": {
+        "bytes": 725,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000002.json",
+        "sha256": "de9ef1a9dacc5cc313231044a1d2a749e741828b66759597464c8c5cb39c093d"
+      },
+      "rounds": 6,
+      "seed": 2620002,
+      "timings": {
+        "act": {
+          "calls": 423,
+          "failed_calls": 0,
+          "seconds": 3.3883592060301453
+        },
+        "close": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 0.26753137609921396
+        },
+        "construction": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 6.562748041120358
+        },
+        "native_validation": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 0.031200582976453006
+        },
+        "record_game": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 14.828489458072
+        },
+        "reset": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 4.569411250995472
+        }
+      },
+      "trace": {
+        "bytes": 20986,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000002.trace.jsonl.gz",
+        "sha256": "667c5f3ed02b27c75cefe517277094d98e0fa816c1681ae6604c1fd99257043d"
+      }
+    },
+    {
+      "decisions": 993,
+      "game_and_validation_seconds": 19.534819917054847,
+      "index": 3,
+      "mjai": {
+        "bytes": 5713,
+        "path": "datasets/mjai/phase2-teacher-probe-v1/game-000003.jsonl.gz",
+        "sha256": "3d3326b67e3601877c9d104c038a34cad5925d0eb58b8c2662cc1f94cb7f3b92"
+      },
+      "raw": {
+        "bytes": 5696,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000003.jsonl.gz",
+        "sha256": "0477bb6035d8c4fd86e16a9079a0e4e71438d2960bd59980dba8dc901c98ecf9"
+      },
+      "receipt": {
+        "bytes": 1349,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000003.verification.json",
+        "sha256": "39791e1051029e823eac43c7762827149b0d2f9cea4e41d989d4fcc9d6259732"
+      },
+      "record": {
+        "bytes": 725,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000003.json",
+        "sha256": "dbc235cdb72523afc479959e71b22a4898a712fce3337bc7bef3d2ff783758ec"
+      },
+      "rounds": 15,
+      "seed": 2620003,
+      "timings": {
+        "act": {
+          "calls": 993,
+          "failed_calls": 0,
+          "seconds": 8.13124930264894
+        },
+        "close": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 0.2426077100681141
+        },
+        "construction": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 6.4331460820976645
+        },
+        "native_validation": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 0.06172562506981194
+        },
+        "record_game": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 19.473094291985035
+        },
+        "reset": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 4.584950166754425
+        }
+      },
+      "trace": {
+        "bytes": 47572,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000003.trace.jsonl.gz",
+        "sha256": "5653827a766cf0ceedf3fdba6cffadd526a372bbf85ab0a2218dadb87c5f7e89"
+      }
+    },
+    {
+      "decisions": 758,
+      "game_and_validation_seconds": 17.584306541946717,
+      "index": 4,
+      "mjai": {
+        "bytes": 4379,
+        "path": "datasets/mjai/phase2-teacher-probe-v1/game-000004.jsonl.gz",
+        "sha256": "36801074f00000a3934bbbb52efe0873edd9f023dbdac93ee10f4108355ea07d"
+      },
+      "raw": {
+        "bytes": 4368,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000004.jsonl.gz",
+        "sha256": "27a3346d1de15dbd8415268ffbec0deece86128055b34e5a17aa8e7ea737f506"
+      },
+      "receipt": {
+        "bytes": 1349,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000004.verification.json",
+        "sha256": "eea92ea0320c68b4b7b0b738d32c059264dad88b54b729b762ab32c19252308a"
+      },
+      "record": {
+        "bytes": 725,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000004.json",
+        "sha256": "ae449c3f76cf6d8b82584f549cb6d6561488a2af30cfa4832475c2f3c9b51c4c"
+      },
+      "rounds": 10,
+      "seed": 2620004,
+      "timings": {
+        "act": {
+          "calls": 758,
+          "failed_calls": 0,
+          "seconds": 6.228293121093884
+        },
+        "close": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 0.2692444999702275
+        },
+        "construction": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 6.311614874983206
+        },
+        "native_validation": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 0.05178274994250387
+        },
+        "record_game": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 17.532523792004213
+        },
+        "reset": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 4.659285501227714
+        }
+      },
+      "trace": {
+        "bytes": 36551,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000004.trace.jsonl.gz",
+        "sha256": "a57d91579aa491fd99aedabec819147846ee089e6eec28e8e54f96142f89fce5"
+      }
+    },
+    {
+      "decisions": 762,
+      "game_and_validation_seconds": 17.528205584036186,
+      "index": 5,
+      "mjai": {
+        "bytes": 4607,
+        "path": "datasets/mjai/phase2-teacher-probe-v1/game-000005.jsonl.gz",
+        "sha256": "08f65e1139d33c97c1173bef0736bd1acfb84c80362aca270a02e270c95bb3d4"
+      },
+      "raw": {
+        "bytes": 4593,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000005.jsonl.gz",
+        "sha256": "86acd96fca0b085fc60260285af1b73b2370234d861ed750d02655bbbe10cf7e"
+      },
+      "receipt": {
+        "bytes": 1349,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000005.verification.json",
+        "sha256": "1a9b3ed8d82fcbeb978de8322bee5b3e6789dec7c9611a9d1cf4ce9576782321"
+      },
+      "record": {
+        "bytes": 725,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000005.json",
+        "sha256": "d90e82b6d33ca956e0a93c4481b3a30325acb9a5ccd517b720b885c46d3b6711"
+      },
+      "rounds": 12,
+      "seed": 2620005,
+      "timings": {
+        "act": {
+          "calls": 762,
+          "failed_calls": 0,
+          "seconds": 6.240956466877833
+        },
+        "close": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 0.2716276680584997
+        },
+        "construction": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 6.2878239990677685
+        },
+        "native_validation": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 0.052931834012269974
+        },
+        "record_game": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 17.475273750023916
+        },
+        "reset": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 4.61139616498258
+        }
+      },
+      "trace": {
+        "bytes": 36757,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000005.trace.jsonl.gz",
+        "sha256": "96e84b0427f58f9ecfb7e8a6f151e53c629d4172075bef45ef8ae06c3063ffae"
+      }
+    },
+    {
+      "decisions": 644,
+      "game_and_validation_seconds": 16.53938479104545,
+      "index": 6,
+      "mjai": {
+        "bytes": 3912,
+        "path": "datasets/mjai/phase2-teacher-probe-v1/game-000006.jsonl.gz",
+        "sha256": "f7363280d28cc95f8304f70544172b5f10f871111eb6e95c6b5b79503057490a"
+      },
+      "raw": {
+        "bytes": 3902,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000006.jsonl.gz",
+        "sha256": "f833d5cd8744bcb4e032d12297854faa25aa13feae53069e0e231c49489ab584"
+      },
+      "receipt": {
+        "bytes": 1349,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000006.verification.json",
+        "sha256": "55f1d0382ede77311d889c8c319cc381a013c19a620463c69dad8b7769905437"
+      },
+      "record": {
+        "bytes": 725,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000006.json",
+        "sha256": "2310c53c2b73b2cf4e42e6d91e3189ca7c83f7b8be738dd1b8aed02760fd52e9"
+      },
+      "rounds": 10,
+      "seed": 2620006,
+      "timings": {
+        "act": {
+          "calls": 644,
+          "failed_calls": 0,
+          "seconds": 5.209736884105951
+        },
+        "close": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 0.23972545808646828
+        },
+        "construction": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 6.443506417097524
+        },
+        "native_validation": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 0.038873333018273115
+        },
+        "record_game": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 16.500511458027177
+        },
+        "reset": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 4.546447292086668
+        }
+      },
+      "trace": {
+        "bytes": 31217,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000006.trace.jsonl.gz",
+        "sha256": "8f2473e357223319783481537d2784d787603861bd6769497a583f239e9204be"
+      }
+    },
+    {
+      "decisions": 602,
+      "game_and_validation_seconds": 16.49669354199432,
+      "index": 7,
+      "mjai": {
+        "bytes": 3824,
+        "path": "datasets/mjai/phase2-teacher-probe-v1/game-000007.jsonl.gz",
+        "sha256": "40326a1574cf79b2f597eeae62f4e07f10ae40f766e0db71860758d37667c5bf"
+      },
+      "raw": {
+        "bytes": 3807,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000007.jsonl.gz",
+        "sha256": "29a348cbeac800ca71618b922f45841c2eac6f11046310da8430f020a1a96cba"
+      },
+      "receipt": {
+        "bytes": 1348,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000007.verification.json",
+        "sha256": "86ac10d97c4fd1506c7d0cb2bfcfbcaa131d733c6b50b894e9d2523277999ce7"
+      },
+      "record": {
+        "bytes": 725,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000007.json",
+        "sha256": "1d1d37177c2e28dcc5a79b2d4d68324aba631e2b88b8e5c180349282d5534aab"
+      },
+      "rounds": 10,
+      "seed": 2620007,
+      "timings": {
+        "act": {
+          "calls": 602,
+          "failed_calls": 0,
+          "seconds": 4.959430997027084
+        },
+        "close": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 0.240552292088978
+        },
+        "construction": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 6.6100313331699
+        },
+        "native_validation": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 0.04093054204713553
+        },
+        "record_game": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 16.455762999947183
+        },
+        "reset": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 4.586396167986095
+        }
+      },
+      "trace": {
+        "bytes": 29340,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000007.trace.jsonl.gz",
+        "sha256": "15f1b67be97728b0014c8b22ea781859d52d73fe4f2f508f5115d2241063a8c9"
+      }
+    },
+    {
+      "decisions": 761,
+      "game_and_validation_seconds": 17.801582042127848,
+      "index": 8,
+      "mjai": {
+        "bytes": 4637,
+        "path": "datasets/mjai/phase2-teacher-probe-v1/game-000008.jsonl.gz",
+        "sha256": "cfeba84cd78873e1d7389a39c28914cf1cd9568babfcfb8158941ad5ec6abb24"
+      },
+      "raw": {
+        "bytes": 4622,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000008.jsonl.gz",
+        "sha256": "730c69c5f9323dbdb9cfbd4ba526caa4c85e540aca69f1c14abf7069da97bbfe"
+      },
+      "receipt": {
+        "bytes": 1349,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000008.verification.json",
+        "sha256": "4bc49d1dd90ebf966fcf625614b527ba6a65513145809533782c8cbf1245ccd2"
+      },
+      "record": {
+        "bytes": 725,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000008.json",
+        "sha256": "50393c93f1d8c22dd8ca2d7c2a3bdbb9c2073678480b4b79f179dc691fdfa8e5"
+      },
+      "rounds": 13,
+      "seed": 2620008,
+      "timings": {
+        "act": {
+          "calls": 761,
+          "failed_calls": 0,
+          "seconds": 6.169319692184217
+        },
+        "close": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 0.2776813741074875
+        },
+        "construction": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 6.69585412403103
+        },
+        "native_validation": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 0.051162583054974675
+        },
+        "record_game": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 17.750419459072873
+        },
+        "reset": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 4.542987500084564
+        }
+      },
+      "trace": {
+        "bytes": 36731,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000008.trace.jsonl.gz",
+        "sha256": "4b2e1406226315a193ff93f34b26f5efd4b6f6d29a28aa933a98b06b8d14faf3"
+      }
+    },
+    {
+      "decisions": 710,
+      "game_and_validation_seconds": 17.404533499036916,
+      "index": 9,
+      "mjai": {
+        "bytes": 4479,
+        "path": "datasets/mjai/phase2-teacher-probe-v1/game-000009.jsonl.gz",
+        "sha256": "1c1e55587f33dfc2c647c1dd1fd3c84cc48d26c7308aa1eb6ac197b346e48bfd"
+      },
+      "raw": {
+        "bytes": 4470,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000009.jsonl.gz",
+        "sha256": "4f6b1753df556132089be42521e1e9d5cb746791426de40cd6fbf0b84800d21e"
+      },
+      "receipt": {
+        "bytes": 1349,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000009.verification.json",
+        "sha256": "e3856f70ae921dc35caf3ca94bbea90cd87824245e16354e878a9c1103fd8065"
+      },
+      "record": {
+        "bytes": 725,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000009.json",
+        "sha256": "b7d9ff18b5d7949c453178d2197c144c996225e0423024d7676ee53e27979c2b"
+      },
+      "rounds": 13,
+      "seed": 2620009,
+      "timings": {
+        "act": {
+          "calls": 710,
+          "failed_calls": 0,
+          "seconds": 5.66553248593118
+        },
+        "close": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 0.23853220813907683
+        },
+        "construction": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 6.743317792075686
+        },
+        "native_validation": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 0.04232141608372331
+        },
+        "record_game": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 17.362212082953192
+        },
+        "reset": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 4.650187626015395
+        }
+      },
+      "trace": {
+        "bytes": 34342,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000009.trace.jsonl.gz",
+        "sha256": "fb23ce55456f661d73068d0e4edfe996fa4ca773fedd9df070dae0151b62fece"
+      }
+    },
+    {
+      "decisions": 809,
+      "game_and_validation_seconds": 18.287192375049926,
+      "index": 10,
+      "mjai": {
+        "bytes": 4839,
+        "path": "datasets/mjai/phase2-teacher-probe-v1/game-000010.jsonl.gz",
+        "sha256": "de035a1093ad8005e901911f2683c448b9d9824332247f8fc6d1498c1bdd635c"
+      },
+      "raw": {
+        "bytes": 4822,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000010.jsonl.gz",
+        "sha256": "3baca9329e687b97eba51d21d30368eec2461cd1fcf73bbb0d44ffa204272dc0"
+      },
+      "receipt": {
+        "bytes": 1349,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000010.verification.json",
+        "sha256": "c2ae57391240bf5ce2881411919c0e68d5962ea28852cc523280f392ff60a6ce"
+      },
+      "record": {
+        "bytes": 725,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000010.json",
+        "sha256": "8d567b149f2123897bba13826f6ad3474d2c9fba68615fb201e44ce7d788be7c"
+      },
+      "rounds": 13,
+      "seed": 2620010,
+      "timings": {
+        "act": {
+          "calls": 809,
+          "failed_calls": 0,
+          "seconds": 6.42280712351203
+        },
+        "close": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 0.266954124905169
+        },
+        "construction": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 6.690320209949277
+        },
+        "native_validation": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 0.054057625005953014
+        },
+        "record_game": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 18.233134750043973
+        },
+        "reset": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 4.7864735829643905
+        }
+      },
+      "trace": {
+        "bytes": 38940,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000010.trace.jsonl.gz",
+        "sha256": "f6dd16298b36db36a412726080c7991ddecca5b19211f4d93494abcc2ad975f6"
+      }
+    },
+    {
+      "decisions": 809,
+      "game_and_validation_seconds": 18.037021458963864,
+      "index": 11,
+      "mjai": {
+        "bytes": 5004,
+        "path": "datasets/mjai/phase2-teacher-probe-v1/game-000011.jsonl.gz",
+        "sha256": "4ac28fa88a6a3d631daef9a91dc94ae50b1bd9caf7c2d90d8ff15fb63fe54eb8"
+      },
+      "raw": {
+        "bytes": 4993,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000011.jsonl.gz",
+        "sha256": "b7ebcf8f96bb52a979744e3cf0e86697b95fab242f39f67d32007247d368cac5"
+      },
+      "receipt": {
+        "bytes": 1349,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000011.verification.json",
+        "sha256": "d619c392676d6c2559eaa50018614c358c786a47c1c1faf7ab5c7285d8ea0b95"
+      },
+      "record": {
+        "bytes": 725,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000011.json",
+        "sha256": "74a075def8b97eb8129597c0b4cff6ed6a9ea1ee211525eb7eb923913bb6f6ec"
+      },
+      "rounds": 14,
+      "seed": 2620011,
+      "timings": {
+        "act": {
+          "calls": 809,
+          "failed_calls": 0,
+          "seconds": 6.282774832798168
+        },
+        "close": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 0.23952591698616743
+        },
+        "construction": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 6.645422291010618
+        },
+        "native_validation": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 0.04671899997629225
+        },
+        "record_game": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 17.99030245898757
+        },
+        "reset": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 4.7514131660573184
+        }
+      },
+      "trace": {
+        "bytes": 39053,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000011.trace.jsonl.gz",
+        "sha256": "efe5b2a06255c4dfa7fc87ee787fdc69cd19954d7945c15dc4be28aa3b75fe37"
+      }
+    },
+    {
+      "decisions": 791,
+      "game_and_validation_seconds": 17.647814125055447,
+      "index": 12,
+      "mjai": {
+        "bytes": 4856,
+        "path": "datasets/mjai/phase2-teacher-probe-v1/game-000012.jsonl.gz",
+        "sha256": "bd4376452fa4ef94228a3f45401d66b4f94144f42c2f3fa19dee61957e350544"
+      },
+      "raw": {
+        "bytes": 4839,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000012.jsonl.gz",
+        "sha256": "117d1b53d800ec8f4173a5c1927d728522453433a3ee6a37ce8241e5b893cbcb"
+      },
+      "receipt": {
+        "bytes": 1349,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000012.verification.json",
+        "sha256": "0ddb0c7426ccc65a6d2b1b39190b8a6b42f8e27dd289b09ced2626f0c2b1a2a2"
+      },
+      "record": {
+        "bytes": 725,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000012.json",
+        "sha256": "1a4a7b64fa98d901eeb61333cceb60f522601236fd0720a9c0d530965b9ef3b0"
+      },
+      "rounds": 15,
+      "seed": 2620012,
+      "timings": {
+        "act": {
+          "calls": 791,
+          "failed_calls": 0,
+          "seconds": 6.348743709269911
+        },
+        "close": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 0.2329686670564115
+        },
+        "construction": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 6.380953293177299
+        },
+        "native_validation": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 0.04520387505181134
+        },
+        "record_game": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 17.602610250003636
+        },
+        "reset": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 4.567600459326059
+        }
+      },
+      "trace": {
+        "bytes": 38086,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000012.trace.jsonl.gz",
+        "sha256": "5126bf0a51c9951607f704bb619dd96502c2d64e42a2a5f13f540e390e384342"
+      }
+    },
+    {
+      "decisions": 592,
+      "game_and_validation_seconds": 15.912987750023603,
+      "index": 13,
+      "mjai": {
+        "bytes": 3874,
+        "path": "datasets/mjai/phase2-teacher-probe-v1/game-000013.jsonl.gz",
+        "sha256": "510fee353f50f0ebdac90e5c2343b963b5df0103ef4c32959b255ece31968224"
+      },
+      "raw": {
+        "bytes": 3858,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000013.jsonl.gz",
+        "sha256": "04c0eca6262fd50cdc3100d5c8a9793e872091361a4c5192f5a57ca7a6852c55"
+      },
+      "receipt": {
+        "bytes": 1347,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000013.verification.json",
+        "sha256": "63c079bfc7b211d538406b149a1b8364690f2653608915cf52f305c0c67b8e1e"
+      },
+      "record": {
+        "bytes": 725,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000013.json",
+        "sha256": "32e1cba5a7189790382c1ac8c7bb44c0917f6833a18421a814cb8a07ddc81a5d"
+      },
+      "rounds": 11,
+      "seed": 2620013,
+      "timings": {
+        "act": {
+          "calls": 592,
+          "failed_calls": 0,
+          "seconds": 4.686851873411797
+        },
+        "close": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 0.23579287505708635
+        },
+        "construction": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 6.270713000907563
+        },
+        "native_validation": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 0.035131791955791414
+        },
+        "record_game": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 15.877855958067812
+        },
+        "reset": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 4.624924874166027
+        }
+      },
+      "trace": {
+        "bytes": 28842,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000013.trace.jsonl.gz",
+        "sha256": "8c914f5a28f4c519e5493eccfbfa8b3b9a093972ff3700bcefa12e4b5377939b"
+      }
+    },
+    {
+      "decisions": 503,
+      "game_and_validation_seconds": 15.57161120895762,
+      "index": 14,
+      "mjai": {
+        "bytes": 3333,
+        "path": "datasets/mjai/phase2-teacher-probe-v1/game-000014.jsonl.gz",
+        "sha256": "0012020cfc7d030702d659bff76df01f9e2c89a50085aedbae5eda21f9df2bf2"
+      },
+      "raw": {
+        "bytes": 3316,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000014.jsonl.gz",
+        "sha256": "d5433090689625f62ca867ab1348902494d8cc359c9f318540acffca6c5b399c"
+      },
+      "receipt": {
+        "bytes": 1347,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000014.verification.json",
+        "sha256": "d5be1bfacc6b18d87753fa0e7f8461a8b8db45a0e1edbd7218863db3a56b8cb6"
+      },
+      "record": {
+        "bytes": 725,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000014.json",
+        "sha256": "9bdc3f8d7eb63247c2069142718ae0096d7d79468ddc24bc7d8d508034728c55"
+      },
+      "rounds": 9,
+      "seed": 2620014,
+      "timings": {
+        "act": {
+          "calls": 503,
+          "failed_calls": 0,
+          "seconds": 4.075197180383839
+        },
+        "close": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 0.24965866608545184
+        },
+        "construction": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 6.354562333901413
+        },
+        "native_validation": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 0.029504833975806832
+        },
+        "record_game": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 15.542106374981813
+        },
+        "reset": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 4.811696041957475
+        }
+      },
+      "trace": {
+        "bytes": 24679,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000014.trace.jsonl.gz",
+        "sha256": "2da362a5ffdb69eb7c47dd4edf574f0e538481b089ad7c98713c9f094b9e7c09"
+      }
+    },
+    {
+      "decisions": 754,
+      "game_and_validation_seconds": 17.463731082971208,
+      "index": 15,
+      "mjai": {
+        "bytes": 4849,
+        "path": "datasets/mjai/phase2-teacher-probe-v1/game-000015.jsonl.gz",
+        "sha256": "667de4821f085591574afdfb0593d4ab0b274e3d1ace0cd91f386c9c34a761aa"
+      },
+      "raw": {
+        "bytes": 4834,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000015.jsonl.gz",
+        "sha256": "455ae5cdfd2611c2037be6e2f9dc15ff0f6c26401802e094516528b5250ec2fb"
+      },
+      "receipt": {
+        "bytes": 1349,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000015.verification.json",
+        "sha256": "dcb63be14bf55f8908fbdc15d918862edb09971b0202be5100dbf46976645b08"
+      },
+      "record": {
+        "bytes": 725,
+        "path": "datasets/manifests/phase2-teacher-probe-v1/game-000015.json",
+        "sha256": "950628d66e1ca8e63d515ce99b19bd0908631cfa57620bae295e0641acebe485"
+      },
+      "rounds": 15,
+      "seed": 2620015,
+      "timings": {
+        "act": {
+          "calls": 754,
+          "failed_calls": 0,
+          "seconds": 6.00640734040644
+        },
+        "close": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 0.23791712697129697
+        },
+        "construction": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 6.5304057081229985
+        },
+        "native_validation": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 0.04435633297543973
+        },
+        "record_game": {
+          "calls": 1,
+          "failed_calls": 0,
+          "seconds": 17.419374749995768
+        },
+        "reset": {
+          "calls": 4,
+          "failed_calls": 0,
+          "seconds": 4.566957083181478
+        }
+      },
+      "trace": {
+        "bytes": 36419,
+        "path": "datasets/raw/phase2-teacher-probe-v1/game-000015.trace.jsonl.gz",
+        "sha256": "f1d6fb3f96d5fe942a46d1d0fe3210d304bed8fa789b49b97570d4278d2a0ddf"
+      }
+    }
+  ],
+  "illegal_actions": 0,
+  "kind": "four-teacher-cost-and-receipt-verification-v1",
+  "measurement": "Original collect_selfplay; sys.monitoring local PY_START/PY_RETURN on six original functions, global PY_UNWIND filtered to those functions. No function replacement or policy changes. Observer callback overhead included in wall time.",
+  "name": "phase2-teacher-probe-v1",
+  "phase_interpretation": {
+    "act_fraction_of_collect_wall": 0.32543047910707285,
+    "construction_reset_close_fraction_of_collect_wall": 0.6617021691087965,
+    "construction_reset_close_seconds": 181.88437700958457,
+    "native_validation_fraction_of_collect_wall": 0.002545141269000363,
+    "record_game_is_inclusive": true,
+    "remaining_collection_overhead_seconds": 2.8373019109712914,
+    "reset_includes_model_load_and_artifact_stat_checks": true
+  },
+  "phase_totals": {
+    "act": {
+      "calls": 11071,
+      "failed_calls": 0,
+      "seconds": 89.45220782945398
+    },
+    "close": {
+      "calls": 64,
+      "failed_calls": 0,
+      "seconds": 3.995016338885762
+    },
+    "construction": {
+      "calls": 64,
+      "failed_calls": 0,
+      "seconds": 103.72846016881522
+    },
+    "native_validation": {
+      "calls": 16,
+      "failed_calls": 0,
+      "seconds": 0.6995918340981007
+    },
+    "record_game": {
+      "calls": 16,
+      "failed_calls": 0,
+      "seconds": 272.3502841681475
+    },
+    "reset": {
+      "calls": 64,
+      "failed_calls": 0,
+      "seconds": 74.16090050188359
+    }
+  },
+  "post_collection_verification": "Bound and checked existing native-verification receipts, artifact hashes, canonical MJAI, original trace headers and four-seat provenance; did not repeat native replay inside the cost measurement",
+  "rules": {
+    "engine_version": "0.4.10",
+    "game_mode": "4p-red-half",
+    "preset": "tenhou"
+  },
+  "schema_version": 1,
+  "seed_start": 2620000,
+  "seed_stop_inclusive": 2620015,
+  "status": "passed",
+  "teacher_provenance": {
+    "artifacts": {
+      "manifest_path": {
+        "declared_path": "runtime-manifest.json",
+        "declared_sha256": "c36af3540f1d55d8cc87a177a52fb7391c8635bfd38ee4e0543f3cb28e4ced50",
+        "path": "/Volumes/新加卷/AgariLab/runs/phase2-mortal-s42-v1/runtime-manifest.json",
+        "sha256": "c36af3540f1d55d8cc87a177a52fb7391c8635bfd38ee4e0543f3cb28e4ced50"
+      }
+    },
+    "descriptor": {
+      "artifacts": {
+        "manifest_path": {
+          "path": "runtime-manifest.json",
+          "sha256": "c36af3540f1d55d8cc87a177a52fb7391c8635bfd38ee4e0543f3cb28e4ced50"
+        }
+      },
+      "factory": "agari_kit.opponents.mortal:MortalAgent",
+      "kwargs": {
+        "startup_timeout_seconds": 60,
+        "threads": 1,
+        "timeout_seconds": 10
+      }
+    },
+    "descriptor_path": "/Volumes/新加卷/AgariLab/runs/phase2-mortal-s42-v1/agent.json",
+    "descriptor_sha256": "de676bf5b23cb79327564cb89f512179cdc4642eed2dd66e5afcbe1fd0f0f70e",
+    "factory": "agari_kit.opponents.mortal:MortalAgent",
+    "kind": "external",
+    "name": "@/Volumes/新加卷/AgariLab/runs/phase2-mortal-s42-v1/agent.json",
+    "source": {
+      "files": 23,
+      "module": "agari_kit.opponents.mortal",
+      "module_path": "/Users/zhou/MyCodes/AgariLab/phase2-runtime-20261029-v1/agari-kit/src/agari_kit/opponents/mortal.py",
+      "package": "agari_kit",
+      "roots": [
+        "/Users/zhou/MyCodes/AgariLab/phase2-runtime-20261029-v1/agari-kit/src/agari_kit"
+      ],
+      "source_sha256": "5a5e61056e56b01fe8446775541c58cb9cb06ddc4e70fd3f4e651ca5932faa10"
+    }
+  },
+  "teacher_provenance_sha256": "427e5cb6908c812c7d01b774eecf3ef1cf03c4e4ab19c10c7ff27b321f733876",
+  "training_use": "Engineering probe only, not training data; no split created; does not authorize pilot collection or training",
+  "verified_receipts": 16,
+  "wall": {
+    "collect_seconds": 274.87347858410794,
+    "driver_seconds": 274.960818832973,
+    "seconds_per_game_including_everything": 17.1875,
+    "usr_bin_time_real_seconds": 275.0,
+    "usr_bin_time_system_seconds": 37.74,
+    "usr_bin_time_user_seconds": 192.86
+  }
+}
