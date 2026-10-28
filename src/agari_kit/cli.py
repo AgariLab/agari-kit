@@ -44,6 +44,8 @@ def parser() -> argparse.ArgumentParser:
     selfplay.add_argument("--name", required=True)
     selfplay.add_argument("--games", type=int, default=1000)
     selfplay.add_argument("--seed-start", type=int, default=0)
+    selfplay.add_argument("--max-wall-seconds", type=float,
+                          help="Pause at a verified whole-game boundary; rerun the same dataset to resume")
     selfplay.add_argument("--agents", nargs=4, default=["efficiency"] * 4,
                           help="Four builtin names or @agent-descriptor paths")
     split = data_commands.add_parser("split")
@@ -55,6 +57,12 @@ def parser() -> argparse.ArgumentParser:
     evaluation.add_argument("--seed-start", type=int, default=0)
     evaluation.add_argument("--seed-count", type=int, default=1, help="Four hanchan per seed")
     evaluation.add_argument("--run", required=True, help="New relative directory below runs")
+    evaluation.add_argument("--campaign", action="store_true", help="Seal complete seed groups for resumable evaluation")
+    evaluation.add_argument("--resume", action="store_true", help="Resume an existing campaign with identical conditions")
+    evaluation.add_argument("--shard-seeds", type=int, default=25, help="Seed groups per campaign shard")
+    evaluation.add_argument("--shard-index", type=int, help="Run only this zero-based campaign shard")
+    evaluation.add_argument("--merge-only", action="store_true", help="Verify and merge a completed campaign without playing")
+    evaluation.add_argument("--max-wall-seconds", type=float, help="Pause a campaign at a complete seed boundary")
     replay = commands.add_parser("replay", help="Export a self-contained offline MJAI replay HTML")
     replay.add_argument("path", type=Path)
     replay.add_argument("--output", type=Path, required=True, help="New .html artifact (never overwritten)")
@@ -100,6 +108,7 @@ def main(argv: list[str] | None = None) -> int:
             if args.data_command == "selfplay":
                 result = collect_selfplay(storage, name=args.name, games=args.games,
                                           seed_start=args.seed_start, agents=args.agents,
+                                          max_wall_seconds=args.max_wall_seconds,
                                           progress=lambda event: print(json.dumps(event), file=sys.stderr, flush=True))
             else:
                 catalog = storage.path("datasets/manifests/" + args.catalog)
@@ -124,8 +133,18 @@ def main(argv: list[str] | None = None) -> int:
             storage = Storage.from_env()
             storage.check(probe=True)
             output = storage.path("runs/" + args.run)
-            result = evaluate(list(range(args.seed_start, args.seed_start + args.seed_count)),
-                              [args.candidate] + args.opponents, output)
+            seeds = list(range(args.seed_start, args.seed_start + args.seed_count))
+            lineup = [args.candidate] + args.opponents
+            if args.campaign:
+                from .evaluation_campaign import evaluate_campaign
+                result = evaluate_campaign(seeds, lineup, output, resume=args.resume,
+                                           shard_seed_count=args.shard_seeds, shard_index=args.shard_index,
+                                           merge_only=args.merge_only, max_wall_seconds=args.max_wall_seconds)
+            else:
+                if (args.resume or args.merge_only or args.shard_index is not None
+                        or args.max_wall_seconds is not None or args.shard_seeds != 25):
+                    raise ValueError("Evaluation resume/shard/budget options require --campaign")
+                result = evaluate(seeds, lineup, output)
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0
     except (ValueError, RuntimeError, OSError) as exc:

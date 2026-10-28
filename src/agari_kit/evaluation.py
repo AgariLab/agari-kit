@@ -18,6 +18,81 @@ from .plugins import agent_provenance
 from .provenance import source_fingerprint
 
 
+DIAGNOSTIC_COUNTS = ("hands", "wins", "tsumo_wins", "ron_wins", "deal_ins",
+                     "deal_in_payments", "open_hands", "riichi_hands", "meld_events",
+                     "kan_events", "riichi_declarations")
+
+
+def diagnostic_rates(counts: dict) -> dict:
+    """Rates use hands, not decisions; multi-ron counts one deal-in hand."""
+    result = {key: counts.get(key, 0) for key in DIAGNOSTIC_COUNTS}
+    for name, count in (("win_rate", "wins"), ("deal_in_rate", "deal_ins"),
+                        ("open_hand_rate", "open_hands"), ("riichi_rate", "riichi_hands")):
+        result[name] = result[count] / result["hands"] if result["hands"] else None
+    return result
+
+
+def candidate_diagnostics(events: list[dict], seat: int) -> dict:
+    """Derive candidate-only hand statistics from the completed engine log.
+
+    Ankan is a kan but not an open hand. Riichi means reach_accepted. A double
+    ron against the candidate contributes two payments and one deal-in hand.
+    These retrospective statistics are never passed to an Agent.
+    """
+    counts = Counter()
+    hand = None
+
+    def finish():
+        if hand is not None:
+            counts["hands"] += 1
+            counts.update({key: int(value) for key, value in hand.items()})
+
+    for event in events:
+        kind, actor = event.get("type"), event.get("actor")
+        if kind == "start_kyoku":
+            finish()
+            hand = dict.fromkeys(("wins", "deal_ins", "open_hands", "riichi_hands"), False)
+        elif kind in ("end_kyoku", "end_game"):
+            finish()
+            hand = None
+        elif hand is not None:
+            if kind == "hora":
+                if actor == seat:
+                    hand["wins"] = True
+                    counts["tsumo_wins" if event.get("target") == seat else "ron_wins"] += 1
+                elif event.get("target") == seat:
+                    hand["deal_ins"] = True
+                    counts["deal_in_payments"] += 1
+            elif actor == seat:
+                if kind in ("chi", "pon", "daiminkan", "kakan"):
+                    hand["open_hands"] = True
+                    counts["meld_events"] += 1
+                if kind in ("ankan", "daiminkan", "kakan"):
+                    counts["kan_events"] += 1
+                if kind == "reach":
+                    counts["riichi_declarations"] += 1
+                if kind == "reach_accepted":
+                    hand["riichi_hands"] = True
+    finish()
+    return diagnostic_rates(counts)
+
+
+def result_report(results: list[dict], candidate_latencies) -> dict:
+    report = summarize(results)
+    report.update(_candidate_latency(candidate_latencies))
+    report["latency_scope"] = "agent.act only; candidate seat isolated; excludes loading and transport"
+    event_counts, diagnostics = Counter(), Counter()
+    for row in results:
+        event_counts.update(row["event_counts"])
+        diagnostics.update({key: row["candidate_diagnostics"][key] for key in DIAGNOSTIC_COUNTS})
+    report["event_counts"] = dict(event_counts)
+    report["candidate_diagnostics"] = diagnostic_rates(diagnostics)
+    report["illegal_actions"] = sum(row["illegal_actions"] for row in results)
+    report["decisions"] = sum(row["decisions"] for row in results)
+    report["elapsed_seconds"] = sum(row["elapsed_seconds"] for row in results)
+    return report
+
+
 def schedule(seeds: list[int], lineup: list[str]):
     if len(lineup) != 4 or not seeds or len(set(seeds)) != len(seeds):
         raise ValueError("Use four agents and at least one unique seed")
@@ -142,21 +217,15 @@ def evaluate(seeds: list[int], lineup: list[str], output: Path, *, max_steps: in
                            "latency_ms_p95": latencies[min(len(latencies)-1, int(len(latencies)*.95))],
                            "latency_ms_max": max(latencies), "illegal_actions": 0,
                            "event_counts": dict(Counter(event["type"] for event in env.mjai_log))}
+                    row["candidate_diagnostics"] = candidate_diagnostics(env.mjai_log, rotation)
                     row.update(_candidate_latency(candidate_game_latencies))
                     stream.write(json.dumps(row) + "\n")
                     stream.flush()
                     results.append(row)
                     candidate_latencies.extend(candidate_game_latencies)
-        report = summarize(results)
-        report.update(_candidate_latency(candidate_latencies))
-        report["latency_scope"] = "agent.act only; candidate seat isolated; excludes loading and transport"
-        event_counts = Counter()
-        for row in results:
-            event_counts.update(row["event_counts"])
-        report["event_counts"] = dict(event_counts)
-        report["illegal_actions"] = sum(row["illegal_actions"] for row in results)
-        report["decisions"] = sum(row["decisions"] for row in results)
-        report["elapsed_seconds"] = sum(row["elapsed_seconds"] for row in results)
+        report = result_report(results, candidate_latencies)
+        # Retain exact samples so sharded reports never average percentiles.
+        (output / "candidate-latencies.json").write_text(json.dumps(list(candidate_latencies)) + "\n")
         (output / "report.json").write_text(json.dumps(report, indent=2) + "\n")
         manifest["status"] = "complete"
         return report
