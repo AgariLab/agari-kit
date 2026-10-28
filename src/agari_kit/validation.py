@@ -18,7 +18,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Iterator
 
-from .agent import Rules
+from .agent import AGENT_NAMES, Rules
 from .engine import new_environment, require_engine
 from .mjai import DataError, canonical_json, inspect_game, read_events
 
@@ -64,6 +64,35 @@ def _trace_records(path: Path) -> Iterator[tuple[int, dict]]:
                 yield number, record
     except (OSError, EOFError) as exc:
         raise DataError(f"{path}: unreadable or truncated trace") from exc
+
+
+def _agent_provenance_hashes(header: dict, where: str) -> list[str] | None:
+    """Bind full recorded provenance without loading agents or accessing paths.
+
+    Early seeded traces omitted this optional field. A present but malformed
+    field must never fall back to that legacy behavior.
+    """
+    if "agent_provenance" not in header:
+        return None
+    provenance = header["agent_provenance"]
+    if not isinstance(provenance, list) or len(provenance) != 4:
+        raise DataError(f"{where}: agent provenance must contain four objects")
+    hashes = []
+    for seat, item in enumerate(provenance):
+        if (not isinstance(item, dict) or item.get("name") != header["agents"][seat]
+                or item.get("kind") not in ("builtin", "external")):
+            raise DataError(f"{where}: agent provenance identity disagrees with player {seat}")
+        if ((item["kind"] == "builtin" and item["name"] not in AGENT_NAMES)
+                or (item["kind"] == "external" and not item["name"].startswith("@"))):
+            raise DataError(f"{where}: invalid agent provenance kind/name for player {seat}")
+        try:
+            # json.loads accepts NaN/Infinity, but they cannot be stable JSON
+            # provenance. Hash every field, including nested runtime metadata.
+            json.dumps(item, allow_nan=False)
+            hashes.append(hashlib.sha256(canonical_json(item).encode()).hexdigest())
+        except (TypeError, ValueError) as exc:
+            raise DataError(f"{where}: invalid JSON agent provenance for player {seat}") from exc
+    return hashes
 
 
 def _check_player_view(snapshot: dict, player_id: int, where: str) -> None:
@@ -147,6 +176,7 @@ not trust a user-supplied ``validation`` string or JSON document.
         raise DataError(f"{trace_path}: trace must identify four agents")
     if not isinstance(header.get("code"), dict):
         raise DataError(f"{trace_path}: missing producer code provenance")
+    agent_hashes = _agent_provenance_hashes(header, str(trace_path))
     engine = new_environment(seed)
     observations = engine.reset()
     steps = decisions = 0
@@ -241,4 +271,6 @@ not trust a user-supplied ``validation`` string or JSON document.
                                "tile_counts": True, "final_scores": True,
                                "all_mjai_events": True, "observation_hashes": True,
                                "player_information_boundary": True}})
+    if agent_hashes is not None:
+        summary["agent_provenance_sha256"] = agent_hashes
     return summary
