@@ -3,7 +3,8 @@
 AgariLab 公共工具，目标运行环境为 Python 3.12 + RiichiEnv 0.4.10。
 当前实现存储检查、Agent 接口、自博弈采集与引擎回放验证、整场登记与冻结划分、
 轮换座位评测、独立离线牌谱回放及 riichi.dev 客户端。随机／摸切／基础牌效与外部模型共用接口。
-基线已完成 1,000 半庄可靠性运行；组织 fork 已建立，外部强对手和实际线上验收仍待完成。
+基线已完成 1,000 半庄可靠性运行；组织 fork 已建立，原版 Akochan 已接入并实际对战。
+真实 riichi.dev 验证已通过，100 场排位验收仍在推进。
 
 ## 存储与安装
 
@@ -139,6 +140,11 @@ python3 scripts/with_storage.py uv run --frozen python scripts/run_online_campai
 请求数、发送数和 accepted 数必须相同且非零；错误回执、超时、降级或身份变化会停止后续匹配，
 同时保留停止场的结果。成绩不参与停止条件，既有目录不覆盖。summary 每场更新完成数、健康数、计数和处理延迟；
 脚本、模型、工具源码和引擎摘要逐场核验。同一 Bot 同时只能运行一个排位连接。
+
+需要排查连接关闭时，可使用[单场安全传输诊断](docs/online-diagnostics.md)。
+它保留原连接参数，只记录数值关闭码和固定错误类别；每次一场，结束或失败后退出。
+active Bot 不重复验证，运行中的进度与全部中断见研究仓库的
+[排位记录](https://github.com/AgariLab/agari-research/tree/main/experiments/riichi-ranked-100-20261028-v1)。
 
 ## 数据与模型版本
 
