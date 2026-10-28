@@ -37,7 +37,90 @@ def unpack(document):
     return json.loads(base64.b64decode(data))
 
 
+def draw_conflict_fixture():
+    """Display fixture using #247's recorded score pattern, not a legal game."""
+    start = fixture()[1]
+    start.update(scores=[32600, 23500, 17400, 26500], honba=2)
+    following = json.loads(json.dumps(start))
+    following.update(scores=[31600, 23500, 16400, 25500], honba=3, kyotaku=3)
+    return [
+        {"type": "start_game"}, start,
+        *({"type": "reach_accepted", "actor": p} for p in [3, 2, 0]),
+        {"type": "ryukyoku", "deltas": [-1000, 0, -1000, -1000]},
+        {"type": "end_kyoku"}, following,
+        {"type": "ryukyoku", "deltas": [0, 0, 0, 0]},
+        {"type": "end_kyoku"},
+        {"type": "end_game", "scores": [34600, 23500, 16400, 25500]},
+    ]
+
+
 class ReplayTests(unittest.TestCase):
+    def exported(self, events, player=None):
+        with tempfile.TemporaryDirectory() as tmp:
+            source, target = Path(tmp) / "game.jsonl", Path(tmp) / "view.html"
+            original = "".join(json.dumps(e) + "\n" for e in events)
+            source.write_text(original)
+            with patch("agari_kit.replay._viewer_assets", return_value=(b"\x1f\x8bfake", "License")):
+                export_replay(source, target, player=player)
+            self.assertEqual(source.read_text(), original)
+            return unpack(target.read_text())
+
+    def test_conflicting_draw_keeps_source_and_does_not_backfill_future_scores(self):
+        events = draw_conflict_fixture()
+        untouched = json.loads(json.dumps(events))
+        data = self.exported(events, player=0)
+        self.assertEqual(events, untouched)
+        self.assertEqual(data["events"][5], events[5])
+        self.assertEqual(data["score_steps"][4]["scores"], [31600, 23500, 16400, 25500])
+        self.assertEqual(data["score_steps"][5], {
+            "basis": "derived", "scores": [30600, 23500, 15400, 24500]})
+        self.assertEqual(data["score_steps"][6], data["score_steps"][5])
+        self.assertEqual(data["score_steps"][7], {
+            "basis": "recorded", "scores": events[7]["scores"]})
+        self.assertEqual(data["score_conflicts"], [{
+            "settlement_event": 6, "next_round_event": 8,
+            "settlement_scores": [30600, 23500, 15400, 24500],
+            "next_round_scores": [31600, 23500, 16400, 25500],
+        }])
+        self.assertEqual(data["manifest"]["score_conflicts"], 1)
+        self.assertEqual(data["events"][1]["tehais"][1:], [["?"] * 13] * 3)
+
+    def test_scores_override_deltas_and_matching_draws_are_not_flagged(self):
+        for recorded in (False, True):
+            events = draw_conflict_fixture()
+            if recorded:
+                events[5]["scores"] = events[7]["scores"][:]
+            else:
+                events[5]["deltas"] = [0] * 4
+            with self.subTest(recorded=recorded):
+                data = self.exported(events)
+                self.assertEqual(data["score_conflicts"], [])
+                self.assertEqual(data["score_steps"][5]["scores"], events[7]["scores"])
+                self.assertEqual(data["score_steps"][5]["basis"],
+                                 "recorded" if recorded else "derived")
+                self.assertEqual(data["events"][5], events[5])
+
+    def test_recorded_score_conflict_is_reported_without_diagnosing_riichi_bug(self):
+        events = draw_conflict_fixture()
+        events[5]["scores"] = [1, 2, 3, 4]
+        data = self.exported(events)
+        self.assertEqual(data["score_steps"][5], {"basis": "recorded", "scores": [1, 2, 3, 4]})
+        self.assertEqual(data["score_conflicts"][0]["settlement_scores"], [1, 2, 3, 4])
+
+    def test_end_game_does_not_confirm_or_repair_the_last_draw(self):
+        for final_scores in ([34600, 23500, 16400, 25500], None):
+            events = draw_conflict_fixture()[:7]
+            events.append({"type": "end_game"})
+            if final_scores is not None:
+                events[-1]["scores"] = final_scores
+            with self.subTest(final_scores=final_scores):
+                data = self.exported(events)
+                self.assertEqual(data["score_conflicts"], [])
+                self.assertEqual(data["score_steps"][5]["scores"], [30600, 23500, 15400, 24500])
+                self.assertEqual(data["score_steps"][-1], {
+                    "basis": "recorded" if final_scores else "derived",
+                    "scores": final_scores or [30600, 23500, 15400, 24500]})
+
     def test_scores_follow_recorded_deltas_and_riichi_deposits(self):
         original = fixture()
         viewed = display_events(original)

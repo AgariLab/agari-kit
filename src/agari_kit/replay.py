@@ -69,8 +69,8 @@ def _validate_display_event(event: dict, number: int) -> None:
         require("scores" in event or "deltas" in event, "settlement needs scores or deltas")
 
 
-def display_events(events: list[dict], player: int | None = None) -> list[dict]:
-    """Prepare a fresh allowlisted stream, with scores derived only from the log.
+def _project_events(events: list[dict], player: int | None = None) -> list[dict]:
+    """Keep source fields separate from scores computed for the renderer.
 
     Player exports contain no opponent initial hands/draws or arbitrary analysis
     metadata. They are conservative views, not serialized Agent Observations.
@@ -79,7 +79,6 @@ def display_events(events: list[dict], player: int | None = None) -> list[dict]:
         raise DataError("player must be 0..3")
     inspect_game(events)
     result = []
-    scores = None
     for number, original in enumerate(events, 1):
         _validate_display_event(original, number)
         kind = original["type"]
@@ -96,17 +95,52 @@ def display_events(events: list[dict], player: int | None = None) -> list[dict]:
                     or not all(isinstance(n, str) for n in names)):
                 raise DataError(f"event {number}: expected four player names")
             event["names"] = list(names)
-        if kind == "start_kyoku":
-            scores = list(event["scores"])
-        elif kind == "reach_accepted":
-            scores[event["actor"]] -= 1000
-        elif kind in {"hora", "ryukyoku"}:
-            scores = list(event["scores"]) if "scores" in event else [
-                score + delta for score, delta in zip(scores, event["deltas"], strict=True)
-            ]
-            event["scores"] = list(scores)
         result.append(event)
     return result
+
+
+def _score_data(events: list[dict]) -> tuple[list[dict], list[dict], list[dict]]:
+    """Causal display scores plus offline comparisons, never inferred repairs.
+
+    Only the immediate settlement / end_kyoku / start_kyoku boundary is compared.
+    end_game can distribute a remaining riichi pool, so it cannot establish the
+    preceding settlement's scores. Comparisons belong only to the HTML replay,
+    not to the shared policy projection or the original MJAI stream.
+    """
+    displayed = json.loads(canonical_json(events))
+    steps, conflicts = [], []
+    scores, basis = None, "unavailable"
+    for index, event in enumerate(displayed):
+        kind = event["type"]
+        if kind == "start_kyoku":
+            if (index >= 2 and events[index - 1]["type"] == "end_kyoku"
+                    and events[index - 2]["type"] in {"hora", "ryukyoku"}
+                    and scores != event["scores"]):
+                conflicts.append({
+                    "settlement_event": index - 1, "next_round_event": index + 1,
+                    "settlement_scores": list(scores),
+                    "next_round_scores": list(event["scores"]),
+                })
+            scores, basis = list(event["scores"]), "recorded"
+        elif kind == "reach_accepted":
+            scores[event["actor"]] -= 1000
+            basis = "derived"
+        elif kind in {"hora", "ryukyoku"}:
+            if "scores" in event:
+                scores, basis = list(event["scores"]), "recorded"
+            else:
+                scores = [s + d for s, d in zip(scores, event["deltas"], strict=True)]
+                basis = "derived"
+                event["scores"] = list(scores)
+        elif kind == "end_game" and "scores" in event:
+            scores, basis = list(event["scores"]), "recorded"
+        steps.append({"basis": basis, "scores": list(scores) if scores is not None else None})
+    return displayed, steps, conflicts
+
+
+def display_events(events: list[dict], player: int | None = None) -> list[dict]:
+    """Renderer events with causal scores; these are not the original events."""
+    return _score_data(_project_events(events, player))[0]
 
 
 def _viewer_assets() -> tuple[bytes, str]:
@@ -134,19 +168,24 @@ def export_replay(source: Path, output: Path, *, player: int | None = None) -> d
         raise DataError(f"Replay output already exists: {output}")
     events = list(read_events(source))
     summary = inspect_game(events)
-    projected = display_events(events, player)
+    projected = _project_events(events, player)
+    displayed, score_steps, score_conflicts = _score_data(projected)
     asset, license_text = _viewer_assets()
     manifest = {
-        "schema_version": 1, "artifact": "offline-mjai-replay", "validation": "structural-only",
+        "schema_version": 2, "artifact": "offline-mjai-replay", "validation": "structural-only",
         "source_sha256": summary["sha256"], "events": summary["events"],
         "rounds": summary["rounds"], "final_scores": summary["scores"],
         "view": "full-information-research" if player is None else f"player-{player}-visible",
         "player": player, "viewer": f"riichienv=={VIEWER_VERSION}",
         "viewer_gzip_sha256": hashlib.sha256(asset).hexdigest(),
-        "display_events_sha256": inspect_game(projected)["sha256"],
+        "projected_events_sha256": inspect_game(projected)["sha256"],
+        "display_events_sha256": inspect_game(displayed)["sha256"],
+        "score_policy": "recorded-at-event-otherwise-derived",
+        "score_conflicts": len(score_conflicts),
     }
     payload = base64.b64encode(
-        canonical_json({"manifest": manifest, "events": projected}).encode()
+        canonical_json({"manifest": manifest, "events": projected,
+                        "score_steps": score_steps, "score_conflicts": score_conflicts}).encode()
     ).decode()
     template = resources.files("agari_kit").joinpath("replay.html").read_text(encoding="utf-8")
     document = Template(template).substitute(

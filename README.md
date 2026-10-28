@@ -82,9 +82,22 @@ agari replay /path/game.jsonl.gz --player 0 --output /path/player-0.html
 两种 HTML 都包含整场历史和未来事件、终局信息，均不能作为当时 Agent 的策略输入；
 Agent 的 Observation 和网络协议保持原接口。
 
-分数依据日志中的 `scores`，或顺序累计立直扣点与结算 `deltas`。不调用上游 Python
-`MetadataInjector`，也不重算和牌得分／役种；上游结算弹窗可能显示 `Score data unavailable`，
-实际各家分数以牌桌与原始事件为准。导出只做结构与显示字段检查，清单仍标记 `structural-only`，
+分数在到达含 `scores` 的起局、结算或终局事件时采用该记录；其余步骤顺序累计立直扣点与
+结算 `deltas`，页面明确标为**未核实的推算值**。当前源事件面板保留投影后的原始字段，
+不会把为渲染计算的 `scores` 写成原始记录。若“结算 → end_kyoku → 下一局起始”的分数
+不一致，页面在相关步骤显著提示，并在清单记录冲突数量；到达下一局时才按该事件的 `scores`
+对齐，不用未来分数回填结算，不推断哪条记录正确或错误原因。此离线对照信息只存在回放 HTML，
+不加入策略事件投影或 Observation。`end_game` 可能分配剩余供托，不能用于反推或确认末局结算；
+没有下一局可对照时，未核实的末局推算仍会明确标注。
+
+这覆盖了 [RiichiEnv #247](https://github.com/smly/RiichiEnv/issues/247) 暴露的旧日志边界：
+部分全员听牌流局／流局满贯的 `deltas` 重复包含已扣的立直供托。回放不根据引擎版本或差额
+猜测修复，不静默改写原牌谱；仅有 `deltas` 的错误日志仍会显示其累计结果及不确定性／冲突，
+不能把数字当作已验证结算。
+
+不调用上游 Python `MetadataInjector`，也不重算和牌得分／役种；上游结算弹窗可能显示
+`Score data unavailable`，实际各家分数及可信范围以牌桌、分数来源提示与源事件为准。
+导出只做结构与显示字段检查，清单仍标记 `structural-only`，
 不能替代 `agari data validate --trace ...` 的引擎验证。原有只读摘要使用 `agari data inspect`。
 
 单元回归覆盖投影、结算、错误输入、无覆盖写入和脚本注入。真实浏览器回归独立运行，使用本机

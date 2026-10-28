@@ -13,10 +13,13 @@ h1 {font-size:20px;margin:0 0 8px} p {margin:8px 0;line-height:1.5}
 button,select,input {font:inherit} select {max-width:220px} #position {min-width:210px}
 #seek {flex:1;min-width:180px} details {margin-top:12px} pre {white-space:pre-wrap;overflow-wrap:anywhere}
 a {color:#95ceff} #error {color:#ff9b9b} .muted {color:#a6b3c0;font-size:13px}
+#score-status {padding:8px 12px;border:1px solid #6d8295;border-radius:4px}
+#score-status[data-basis="derived"], #score-status[data-conflict="true"], #score-summary {color:#ffdc8b}
 </style>
 <header>
 <h1>Agari 离线牌谱回放 · $title</h1>
 <p id="scope"></p>
+<p id="score-summary" hidden></p>
 <p class="muted">单文件离线回放，牌谱不上传。桌面箭头键：左右逐事件、上下逐巡；侧栏可逐局、逐巡及自动播放。
 点击玩家切换桌面朝向。结算分数按日志 scores / deltas 展示；不重算和牌得分，也不代表引擎合法性验证。</p>
 <div class="controls">
@@ -25,11 +28,12 @@ a {color:#95ceff} #error {color:#ff9b9b} .muted {color:#a6b3c0;font-size:13px}
 <input id="seek" type="range" min="1" value="1" aria-label="事件位置"><output id="position"></output>
 </div>
 <p id="error" role="alert"></p>
+<p id="score-status" aria-live="polite"></p>
 </header>
 <main id="viewer">正在载入本地 RiichiEnv 回放…</main>
 <footer>
 <p id="final-scores"></p>
-<details><summary>当前事件（此导出视角）</summary><pre id="event"></pre></details>
+<details><summary>当前源事件（此导出视角，未添加推算 scores）</summary><pre id="event"></pre></details>
 <details><summary>产物来源与校验信息</summary><pre id="manifest"></pre></details>
 <details><summary>RiichiEnv 来源与 Apache-2.0 许可证</summary>
 <p>复用 <a href="https://github.com/smly/RiichiEnv/tree/v0.4.10">RiichiEnv v0.4.10</a>
@@ -50,6 +54,11 @@ Agari 增加离线外壳、日志分数适配和暗牌数量适配，未修改�
             ? '全信息研究视角：展示日志中的所有手牌与摸牌；不可作为玩家当时的策略输入。'
             : '玩家 ' + player + ' 的保守可见视角：其他玩家暗牌已从产物移除。此离线历史仍含未来事件，不可作为策略输入。';
         byId('manifest').textContent = JSON.stringify(data.manifest, null, 2);
+        if (data.score_conflicts.length) {
+            byId('score-summary').hidden = false;
+            byId('score-summary').textContent = '日志分数存在 ' + data.score_conflicts.length +
+                ' 处跨局不一致；相关步骤已标注，未修正原牌谱或判断原因。';
+        }
         byId('final-scores').textContent = '日志终局分数（席位 0–3）：' +
             (data.manifest.final_scores ? data.manifest.final_scores.join(' / ') : '未记录');
         if (!window.DecompressionStream) throw Error('浏览器缺少 DecompressionStream，请使用近期版本 Chrome / Safari / Firefox。');
@@ -61,7 +70,11 @@ Agari 增加离线外壳、日志分数适配和暗牌数量适配，未修改�
         // The native renderer expects "back" for hidden tiles; the artifact
         // itself keeps standard MJAI "?" in the conservative projected stream.
         const log = structuredClone(data.events);
-        for (const e of log) {
+        for (const [index, e] of log.entries()) {
+            // Derived scores are renderer-only; the event panel retains source fields.
+            if (['hora', 'ryukyoku'].includes(e.type) && !e.scores) {
+                e.scores = [...data.score_steps[index].scores];
+            }
             if (e.tehais) e.tehais = e.tehais.map(h => h.map(t => t === '?' ? 'back' : t));
             if (e.pai === '?') e.pai = 'back';
         }
@@ -110,12 +123,33 @@ Agari 增加离线外壳、日志分数适配和暗牌数量适配，未修改�
         const seek = byId('seek');
         seek.max = gs.events.length;
         const exportedSteps = data.events.filter(e => e.type !== 'start_game');
+        const scoreSteps = data.score_steps.slice(1);
         const update = () => {
             seek.value = gs.cursor;
             const e = gs.events[gs.cursor - 1];
             byId('position').textContent = gs.cursor + ' / ' + gs.events.length + ' · ' + e.type;
             // Use immutable exported events rather than upstream computed meta.
             byId('event').textContent = JSON.stringify(exportedSteps[gs.cursor - 1], null, 2);
+            const score = scoreSteps[gs.cursor - 1];
+            const status = byId('score-status');
+            status.dataset.basis = score.basis;
+            let message = score.basis === 'recorded'
+                ? '桌面分数来自日志直接记录的 scores；未做引擎验证。'
+                : '桌面分数为按日志立直扣点与 deltas 累计的推算值，尚未核实；原始日志可能存在重复扣点或缺失。';
+            // Event numbers include start_game; the viewer cursor does not.
+            const eventNumber = gs.cursor + 1;
+            const conflict = data.score_conflicts.find(c =>
+                eventNumber >= c.settlement_event && eventNumber <= c.next_round_event);
+            status.dataset.conflict = String(Boolean(conflict));
+            if (conflict) {
+                message += eventNumber === conflict.next_round_event
+                    ? ' 上一局结算显示与本事件记录不一致；已在此步骤按本局 scores 对齐，未回填旧步骤。'
+                    : ' 离线对照发现此结算与紧随下一局的起始 scores 不一致；当前数字有冲突，未用未来分数回填。';
+            }
+            if (e.type === 'end_game') {
+                message += ' 终局可能包含剩余供托分配，不能据此反推或确认末局结算。';
+            }
+            status.textContent = message;
             round.value = gs.kyokus.filter(k => k.index < gs.cursor).length - 1;
         };
         const jump = index => {

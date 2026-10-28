@@ -297,7 +297,67 @@ class BrowserReplayTests(unittest.TestCase):
         self.assertEqual([p["score"] for p in self.chrome.state()["players"]], [25000, 24000, 25000, 25000])
         self.chrome.click("next")
         self.assertEqual([p["score"] for p in self.chrome.state()["players"]], events[-1]["scores"])
+        self.assertIn("不能据此反推", self.chrome.evaluate("document.getElementById('score-status').textContent"))
+        self.assertEqual(self.chrome.evaluate("document.getElementById('score-status').dataset.conflict"), "false")
         self.assert_offline_and_rendered()
+
+    def test_conflicting_draw_scores_are_labelled_without_future_backfill(self):
+        # Score pattern from upstream #247; a display fixture, not a legal game.
+        start = {"type": "start_kyoku", "bakaze": "E", "kyoku": 1, "honba": 2,
+                 "kyotaku": 0, "oya": 0, "dora_marker": "1s",
+                 "scores": [32600, 23500, 17400, 26500],
+                 "tehais": [["1m"] * 13 for _ in range(4)]}
+        next_start = {**start, "honba": 3, "kyotaku": 3,
+                      "scores": [31600, 23500, 16400, 25500]}
+        events = [{"type": "start_game"}, start,
+                  *({"type": "reach_accepted", "actor": p} for p in [3, 2, 0]),
+                  {"type": "ryukyoku", "deltas": [-1000, 0, -1000, -1000]},
+                  {"type": "end_kyoku"}, next_start,
+                  {"type": "ryukyoku", "deltas": [0, 0, 0, 0]},
+                  {"type": "end_kyoku"},
+                  {"type": "end_game", "scores": [34600, 23500, 16400, 25500]}]
+        source = self.output / "score-conflict-fixture.jsonl"
+        source.write_text("".join(json.dumps(e) + "\n" for e in events))
+        snapshots = []
+        for player in (None, 0):
+            target = self.output / f"score-conflict-{player}.html"
+            export_replay(source, target, player=player)
+            self.chrome.open(target)
+            self.assertFalse(self.chrome.evaluate("document.getElementById('score-summary').hidden"))
+            self.chrome.seek(4)
+            self.assertEqual([p["score"] for p in self.chrome.state()["players"]], next_start["scores"])
+            self.assertEqual(self.chrome.evaluate("document.getElementById('score-status').dataset.conflict"), "false")
+            self.chrome.click("next")
+            derived = [30600, 23500, 15400, 24500]
+            self.assertEqual([p["score"] for p in self.chrome.state()["players"]], derived)
+            message = self.chrome.evaluate("document.getElementById('score-status').textContent")
+            self.assertIn("推算值", message)
+            self.assertIn("当前数字有冲突", message)
+            self.assertIn("未用未来分数回填", message)
+            self.assertEqual(json.loads(self.chrome.evaluate("document.getElementById('event').textContent")), events[5])
+            self.chrome.screenshot(self.output / f"score-conflict-{player}.png")
+            snapshots.append({"player": player, "settlement_scores": derived,
+                              "settlement_notice": message, "source_event": events[5]})
+            self.chrome.click("next")
+            self.assertEqual([p["score"] for p in self.chrome.state()["players"]], derived)
+            self.chrome.click("next")
+            self.assertEqual([p["score"] for p in self.chrome.state()["players"]], next_start["scores"])
+            self.assertIn("已在此步骤", self.chrome.evaluate("document.getElementById('score-status').textContent"))
+            self.chrome.click("previous")
+            self.chrome.click("previous")
+            self.assertEqual([p["score"] for p in self.chrome.state()["players"]], derived)
+            self.chrome.seek(10)
+            self.assertEqual([p["score"] for p in self.chrome.state()["players"]], events[-1]["scores"])
+            self.assertEqual(self.chrome.evaluate("document.getElementById('score-status').dataset.basis"), "recorded")
+            self.chrome.click("previous")
+            self.assertEqual([p["score"] for p in self.chrome.state()["players"]], next_start["scores"])
+            self.assertEqual(self.chrome.evaluate("document.getElementById('score-status').dataset.basis"), "derived")
+            self.assert_offline_and_rendered()
+        (self.output / "score-boundary-evidence.json").write_text(json.dumps({
+            "fixture_kind": "display-only, upstream issue 247 score pattern",
+            "browser": self.chrome.evaluate("navigator.userAgent"), "views": snapshots,
+            "checks": "source preservation, conflict notice, causal scores, rewind, terminal priority, offline",
+        }, ensure_ascii=False, indent=2) + "\n")
 
     def test_chi_daiminkan_and_ankan_rewind_with_hidden_hands(self):
         cases = [
