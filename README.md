@@ -2,7 +2,7 @@
 
 AgariLab 公共工具，目标运行环境为 Python 3.12 + RiichiEnv 0.4.10。
 当前实现存储检查、Agent 接口、自博弈采集与引擎回放验证、整场登记与冻结划分、
-轮换座位评测及 riichi.dev 客户端。随机／摸切／基础牌效与外部模型共用接口。
+轮换座位评测、独立离线牌谱回放及 riichi.dev 客户端。随机／摸切／基础牌效与外部模型共用接口。
 基线已完成 1,000 半庄可靠性运行；组织 fork 已建立，外部强对手和实际线上验收仍待完成。
 
 ## 存储与安装
@@ -38,7 +38,7 @@ agari storage env                      # 输出缓存配置 JSON
 agari data inspect /path/game.jsonl.gz # 流式结构检查，不是麻将合法性验收
 agari data validate /path/game.jsonl.gz --trace /path/game.trace.jsonl.gz
 agari data selfplay --name selfplay-v1 --games 1000 --seed-start 0
-agari replay /path/game.jsonl.gz       # 当前提供牌谱摘要，图形回放待接入
+agari replay /path/game.jsonl.gz --output /path/new-replay.html
 agari data split selfplay-v1/catalog.sqlite selfplay-v1/split-v1.json
 agari evaluate --candidate random --opponents tsumogiri tsumogiri tsumogiri --seed-count 2 --run smoke-v1
 agari evaluate --candidate efficiency --opponents random tsumogiri random --seed-count 250 --run reliability-v2
@@ -58,6 +58,50 @@ agari connect ranked --agent efficiency --token-file .riichi-token --games 100 -
 
 `efficiency` 只用当前手牌和公开信息，先最小化向听数，再最大化有效进张，平手时保留赤五；
 接受和牌和立直，拒绝可选鸣牌。向听计算调用固定 RiichiEnv，不自行实现麻将规则。
+
+## 离线回放
+
+`agari replay` 接受完整四人 MJAI 的 `.jsonl` 或 `.jsonl.gz`，生成一个可直接用浏览器打开的
+HTML 文件。输出目录须已存在，已有文件不覆盖；建议写到外置卷 `runs/` 下。
+使用外置文件系统兼容的独占创建；可捕获的写入失败会清理本次文件，进程崩溃或拔盘仍可能留下
+不完整产物，重试时应使用新路径或先确认并删除该残留文件。
+页面支持前后事件、前后巡、切局、进度拖动、自动播放和桌面朝向切换，显示手牌、弃牌、鸣牌、
+宝牌和分数。末局结算和 `end_game` 为不同步骤，保留终局剩余供托分配的变化，并可回退查看。
+需要支持 `DecompressionStream` 的近期 Chrome、Safari 或 Firefox；实际交互验收
+使用 Chrome。JS、WASM 和牌面来自已安装的固定 RiichiEnv 0.4.10，并全部内联，
+无需服务进程、CDN、上传牌谱或联网加载。页面附上游来源、完整 Apache-2.0 许可证和资产 SHA-256。
+
+```sh
+agari replay /path/game.jsonl.gz --output /path/research.html
+agari replay /path/game.jsonl.gz --player 0 --output /path/player-0.html
+```
+
+默认是明确标注的**全信息研究视角**。`--player 0..3` 在导出前通过现有玩家事件白名单移除
+其他玩家的初始暗牌、未公开摸牌和任意分析注释，浏览器收到的文件中也没有这些牌；切换朝向
+不会恢复隐藏牌。这是保守可见视角，暂不补录和牌／流局揭示的对手手牌。
+两种 HTML 都包含整场历史和未来事件、终局信息，均不能作为当时 Agent 的策略输入；
+Agent 的 Observation 和网络协议保持原接口。
+
+分数依据日志中的 `scores`，或顺序累计立直扣点与结算 `deltas`。不调用上游 Python
+`MetadataInjector`，也不重算和牌得分／役种；上游结算弹窗可能显示 `Score data unavailable`，
+实际各家分数以牌桌与原始事件为准。导出只做结构与显示字段检查，清单仍标记 `structural-only`，
+不能替代 `agari data validate --trace ...` 的引擎验证。原有只读摘要使用 `agari data inspect`。
+
+单元回归覆盖投影、结算、错误输入、无覆盖写入和脚本注入。真实浏览器回归独立运行，使用本机
+Chrome 临时 profile 和已有 `websockets`，无需额外驱动依赖；浏览器禁用网络，只读取指定冻结
+manifest 的第一场 `train` 对局，不读取 held-out 牌谱内容：
+
+```sh
+AGARILAB_STORAGE_ROOT=/Volumes/新加卷/AgariLab \
+AGARI_REPLAY_TRAIN_MANIFEST=/Volumes/新加卷/AgariLab/datasets/manifests/smoke-v1/split-v1.json \
+.venv/bin/python -m unittest discover -s tests/browser -v
+```
+
+可设置 `CHROME_BIN` 指向 Chrome/Chromium，`AGARI_REPLAY_EVIDENCE_DIR` 指向新的外置或临时
+目录，以保留 HTML、渲染截图和 train 来源校验信息；不设置则测试后清理临时产物。
+`AGARI_REPLAY_TRAIN_GAME` 可指定该 manifest 的 `train` 分区内某个牌谱文件名，未属于该分区会失败。
+
+## riichi.dev 连接
 
 连接前需激活虚拟环境，或用存储启动器执行 `uv run --frozen agari ...`。Token 可放入本地环境
 `RIICHI_BOT_TOKEN`，或保存为仅含 Token 的 `.riichi-token` 文件，使用 `--token-file` 指定。

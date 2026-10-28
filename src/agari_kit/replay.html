@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'unsafe-inline'; img-src data:; font-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Agari 回放 · $title</title>
+<style>
+body {margin:0;background:#111820;color:#e6edf3;font:15px system-ui,sans-serif}
+header,footer {max-width:1020px;margin:auto;padding:16px 20px}
+h1 {font-size:20px;margin:0 0 8px} p {margin:8px 0;line-height:1.5}
+#scope {color:#ffdc8b;font-weight:600} #viewer {max-width:1060px;margin:auto}
+.controls {display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0}
+button,select,input {font:inherit} select {max-width:220px} #position {min-width:210px}
+#seek {flex:1;min-width:180px} details {margin-top:12px} pre {white-space:pre-wrap;overflow-wrap:anywhere}
+a {color:#95ceff} #error {color:#ff9b9b} .muted {color:#a6b3c0;font-size:13px}
+</style>
+<header>
+<h1>Agari 离线牌谱回放 · $title</h1>
+<p id="scope"></p>
+<p class="muted">单文件离线回放，牌谱不上传。桌面箭头键：左右逐事件、上下逐巡；侧栏可逐局、逐巡及自动播放。
+点击玩家切换桌面朝向。结算分数按日志 scores / deltas 展示；不重算和牌得分，也不代表引擎合法性验证。</p>
+<div class="controls">
+<label>局 <select id="round" aria-label="选择局"></select></label>
+<button id="previous" type="button">上一事件</button><button id="next" type="button">下一事件</button>
+<input id="seek" type="range" min="1" value="1" aria-label="事件位置"><output id="position"></output>
+</div>
+<p id="error" role="alert"></p>
+</header>
+<main id="viewer">正在载入本地 RiichiEnv 回放…</main>
+<footer>
+<p id="final-scores"></p>
+<details><summary>当前事件（此导出视角）</summary><pre id="event"></pre></details>
+<details><summary>产物来源与校验信息</summary><pre id="manifest"></pre></details>
+<details><summary>RiichiEnv 来源与 Apache-2.0 许可证</summary>
+<p>复用 <a href="https://github.com/smly/RiichiEnv/tree/v0.4.10">RiichiEnv v0.4.10</a>
+随 Python 包分发的原始 viewer.js.gz（含牌面和 WASM）。Copyright 2026 Kohei Ozaki。
+Agari 增加离线外壳、日志分数适配和暗牌数量适配，未修改上游资产。</p>
+<pre>$license</pre></details>
+</footer>
+<script id="agari-replay-data" type="application/octet-stream">$payload</script>
+<script id="agari-viewer-asset" type="application/octet-stream">$viewer</script>
+<script>
+(async () => {
+    const byId = id => document.getElementById(id);
+    const decode = id => Uint8Array.from(atob(byId(id).textContent.trim()), c => c.charCodeAt(0));
+    try {
+        const data = JSON.parse(new TextDecoder().decode(decode('agari-replay-data')));
+        const player = data.manifest.player;
+        byId('scope').textContent = player === null
+            ? '全信息研究视角：展示日志中的所有手牌与摸牌；不可作为玩家当时的策略输入。'
+            : '玩家 ' + player + ' 的保守可见视角：其他玩家暗牌已从产物移除。此离线历史仍含未来事件，不可作为策略输入。';
+        byId('manifest').textContent = JSON.stringify(data.manifest, null, 2);
+        byId('final-scores').textContent = '日志终局分数（席位 0–3）：' +
+            (data.manifest.final_scores ? data.manifest.final_scores.join(' / ') : '未记录');
+        if (!window.DecompressionStream) throw Error('浏览器缺少 DecompressionStream，请使用近期版本 Chrome / Safari / Firefox。');
+        const stream = new Response(decode('agari-viewer-asset')).body.pipeThrough(new DecompressionStream('gzip'));
+        const script = document.createElement('script');
+        script.textContent = await new Response(stream).text();
+        document.head.appendChild(script);
+        if (!window.RiichiEnvViewer) throw Error('RiichiEnv viewer 资产未加载');
+        // The native renderer expects "back" for hidden tiles; the artifact
+        // itself keeps standard MJAI "?" in the conservative projected stream.
+        const log = structuredClone(data.events);
+        for (const e of log) {
+            if (e.tehais) e.tehais = e.tehais.map(h => h.map(t => t === '?' ? 'back' : t));
+            if (e.pai === '?') e.pai = 'back';
+        }
+        const viewer = new window.RiichiEnvViewer('viewer', log, 1, player ?? 0);
+        const gs = viewer.gameState;
+        // Upstream drops end_game. Keep a separate terminal step: a remaining
+        // riichi pool can be awarded here, after the last round's settlement.
+        gs.events.push(log[log.length - 1]);
+        gs.reset();
+        const processEvent = gs.processEvent.bind(gs);
+        gs.processEvent = e => {
+            // Native exact-tile removal cannot consume unknown hands. Reveal
+            // only tiles in THIS public event before its ordinary removal.
+            const hand = gs.getState().players[e.actor]?.hand;
+            if (hand && hand.includes('back')) {
+                const removed = ['dahai', 'kakan'].includes(e.type) ? [e.pai]
+                    : ['chi', 'pon', 'daiminkan', 'ankan'].includes(e.type) ? e.consumed : [];
+                const available = [...hand];
+                for (const tile of removed) {
+                    let index = available.indexOf(tile);
+                    if (index < 0) {
+                        index = available.indexOf('back');
+                        if (index >= 0) hand[index] = tile;
+                    }
+                    if (index >= 0) available[index] = null;
+                }
+            }
+            processEvent(e);
+            if (e.type === 'end_game' && e.scores) {
+                gs.getState().players.forEach((p, i) => { p.score = e.scores[i]; });
+            }
+        };
+        // Show recorded settlement scores; do not generate substitute yaku /
+        // point calculations from a possibly incomplete or projected log.
+        gs.computeScoresViaWasm = () => {};
+        gs.jumpTo(1);
+        viewer.update();
+        const round = byId('round');
+        gs.kyokus.forEach((k, i) => {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = ['东', '南', '西', '北'][Math.floor(k.round / 4)] +
+                (k.round % 4 + 1) + '局 · ' + k.honba + '本场';
+            round.appendChild(option);
+        });
+        const seek = byId('seek');
+        seek.max = gs.events.length;
+        const exportedSteps = data.events.filter(e => e.type !== 'start_game');
+        const update = () => {
+            seek.value = gs.cursor;
+            const e = gs.events[gs.cursor - 1];
+            byId('position').textContent = gs.cursor + ' / ' + gs.events.length + ' · ' + e.type;
+            // Use immutable exported events rather than upstream computed meta.
+            byId('event').textContent = JSON.stringify(exportedSteps[gs.cursor - 1], null, 2);
+            round.value = gs.kyokus.filter(k => k.index < gs.cursor).length - 1;
+        };
+        const jump = index => {
+            viewer.controller.stopAutoPlay();
+            gs.jumpTo(index); viewer.update(); update();
+        };
+        byId('previous').onclick = () => jump(gs.cursor - 1);
+        byId('next').onclick = () => jump(gs.cursor + 1);
+        seek.oninput = () => jump(Number(seek.value));
+        round.onchange = () => jump(gs.kyokus[Number(round.value)].index + 1);
+        viewer.onPositionChange = update;
+        update();
+        // Readable test/debug handle; contains only this export's event view.
+        window.agariReplay = {viewer, manifest: data.manifest};
+        document.documentElement.dataset.replayReady = 'true';
+    } catch (error) {
+        byId('error').textContent = '回放加载失败：' + error.message;
+        byId('viewer').textContent = '';
+        document.documentElement.dataset.replayReady = 'error';
+        console.error(error);
+    }
+})();
+</script>
+</html>

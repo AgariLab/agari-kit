@@ -55,8 +55,11 @@ def parser() -> argparse.ArgumentParser:
     evaluation.add_argument("--seed-start", type=int, default=0)
     evaluation.add_argument("--seed-count", type=int, default=1, help="Four hanchan per seed")
     evaluation.add_argument("--run", required=True, help="New relative directory below runs")
-    replay = commands.add_parser("replay", help="Print a structural summary of a local MJAI replay")
+    replay = commands.add_parser("replay", help="Export a self-contained offline MJAI replay HTML")
     replay.add_argument("path", type=Path)
+    replay.add_argument("--output", type=Path, required=True, help="New .html artifact (never overwritten)")
+    replay.add_argument("--player", type=int, choices=range(4),
+                        help="Export only this player's visible events; default: full-information research")
     connect = commands.add_parser("connect", help="Connect an agent to riichi.dev")
     connect.add_argument("mode", choices=("validate", "ranked"))
     connect.add_argument("--agent", default="tsumogiri", help="Builtin name or @agent-descriptor.json")
@@ -82,7 +85,10 @@ def main(argv: list[str] | None = None) -> int:
                 result = storage.initialize(min_free_bytes=min_free)
             else:
                 result = storage.check(min_free_bytes=min_free, probe=args.probe)
-        elif args.command == "replay" or (args.command == "data" and args.data_command == "inspect"):
+        elif args.command == "replay":
+            from .replay import export_replay
+            result = export_replay(args.path, args.output, player=args.player)
+        elif args.command == "data" and args.data_command == "inspect":
             result = inspect_game(read_events(args.path))
         elif args.command == "data" and args.data_command == "validate":
             from .validation import validate_mjai
